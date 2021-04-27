@@ -1,0 +1,82 @@
+.menu-header-container {
+    padding:2rem;
+    height: 25vh;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-content: space-between;
+    align-items: center;
+    background: url(../../public/assets/images/menu/profile_bg.png);
+}
+.menu-header-container .menu-image-container {
+    border-radius: 100%;
+    flex-basis: 20%;
+    min-height: 5.5rem;
+    min-width: 5.5rem;
+    overflow: hidden;
+}
+
+.menu-profile-container {
+    padding: 0 0 0 2vw;
+    color: #ffffff;
+    display: flex;
+    width: 100%;
+    height: 100%;
+    flex-direction: column;
+}
+.menu-profile-container > h5 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    align-self: flex-start;
+    text-align: center;
+    padding:0;
+    margin:0;
+}
+.menu-profile-container > p {
+    font-size: 0.70rem;
+    font-weight: 500;
+    align-self: flex-start;
+    text-align: center;
+    padding:0;
+    margin:0;
+}
+.menu-profile-container > .menu-stats-container {
+    display: flex;
+    flex-wrap: wrap;
+    align-content: center;
+    flex-direction: row;
+    padding: .60rem 0 0 .80rem;
+}
+.menu-profile-container > .menu-stats-container > p:nth-child(1) {
+    align-self: stretch;
+    flex-basis: 100%;
+    font-size: 0.60rem;
+    padding: 0;
+    margin:0;
+}
+.menu-profile-container > .menu-stats-container > p:nth-child(2) {
+    align-self: stretch;
+    flex-basis: 100%;
+    font-size: 0.60rem;
+    padding: 0;
+    margin:0;
+}
+.menu-profile-container > .menu-stats-container > p:nth-child(3) {
+    align-self: stretch;
+    flex-basis: 80%;
+    font-size: 0.60rem;
+    padding: 0;
+    margin:0;
+}
+.menu-profile-container > .menu-stats-container > p:nth-child(4) {
+    align-self: stretch;
+    flex-basis: 20%;
+    font-size: 0.60rem;
+    padding: 0;
+    margin:0;
+}
+.menu-item {
+   border-bottom: tan solid 1px;
+   min-height: 10vh;
+   /* padding: 0.5rem; */
+}

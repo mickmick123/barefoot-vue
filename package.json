@@ -2,6 +2,7 @@
   "name": "Barefoot",
   "version": "0.0.1",
   "private": true,
+  "description": "An Ionic project",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
@@ -10,12 +11,22 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@capacitor/android": "^2.4.7",
     "@capacitor/core": "2.4.7",
     "@ionic/vue": "^5.4.0",
     "@ionic/vue-router": "^5.4.0",
+    "@mapbox/mapbox-gl-geocoder": "^4.7.0",
+    "@vee-validate/rules": "^4.1.20",
     "core-js": "^3.6.5",
+    "firebase": "^8.4.1",
+    "ionicons": "^5.5.1",
+    "mapbox-gl": "1.13.0",
+    "moment": "^2.24.0",
+    "vee-validate": "^4.3.0",
     "vue": "^3.0.0-0",
-    "vue-router": "^4.0.0-0"
+    "vue-router": "^4.0.0-0",
+    "vuex": "^4.0.0",
+    "yup": "^0.32.9"
   },
   "devDependencies": {
     "@capacitor/cli": "2.4.7",
@@ -28,6 +39,7 @@
     "@vue/cli-plugin-router": "~4.5.0",
     "@vue/cli-plugin-typescript": "~4.5.0",
     "@vue/cli-plugin-unit-jest": "~4.5.0",
+    "@vue/cli-plugin-vuex": "^5.0.0-alpha.8",
     "@vue/cli-service": "~4.5.0",
     "@vue/compiler-sfc": "^3.0.0-0",
     "@vue/eslint-config-typescript": "^5.0.2",
@@ -36,6 +48,5 @@
     "eslint-plugin-vue": "^7.0.0-0",
     "typescript": "~3.9.3",
     "vue-jest": "^5.0.0-0"
-  },
-  "description": "An Ionic project"
+  }
 }

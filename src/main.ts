@@ -22,11 +22,64 @@ import '@ionic/vue/css/display.css';
 
 /* Theme variables */
 import './theme/variables.css';
+import './theme/global.css';
+import './theme/home.css';
+import './theme/registration.css';
+import './theme/map.css';
+import './theme/login.css';
+import './theme/menu.css';
+import './theme/profile.css';
+import './theme/about.css';
+import './theme/interest.css';
+import './theme/gallery.css';
+import './theme/loading.css';
+import './theme/settings.css';
+import './theme/cities.css';
+import './theme/notification.css';
+import './theme/proximity.css';
+import './theme/faq.css';
+import './theme/upgrade.css';
+import './theme/epoints.css';
+import './theme/event.css';
+import './theme/post.css';
+import 'mapbox-gl/dist/mapbox-gl.css';
 
+import firebase from 'firebase';
+import 'firebase/firestore'
+import store from './store'
+const firebaseConfig = {
+  apiKey: "AIzaSyADj_y1dLwMGTnnS4m-Ah1gHov6nqZnfjc",
+  authDomain: "barefoot-dev-299405.firebaseapp.com",
+  databaseURL: "https://barefoot-dev-299405-default-rtdb.firebaseio.com",
+  projectId: "barefoot-dev-299405",
+  storageBucket: "barefoot-dev-299405.appspot.com",
+  messagingSenderId: "890896973016",
+  appId: "1:890896973016:web:f39ab59c47c449a4d6ebad",
+  measurementId: "G-8DXW8HDBRX"
+};
+firebase.initializeApp(firebaseConfig);
+
+firebase.firestore().enablePersistence()
+  .catch((err) => {
+      if (err.code == 'failed-precondition') {
+          // Multiple tabs open, persistence can only be enabled
+          // in one tab at a a time.
+          // ...
+          console.log('failed-precondition')
+      } else if (err.code == 'unimplemented') {
+          // The current browser does not support all of the
+          // features required to enable persistence
+          // ...
+          console.log('unimplemented')
+      }
+  });
+// store.dispatch("users/doAuthCheck").then(() => {
 const app = createApp(App)
+  .use(store)
   .use(IonicVue)
   .use(router);
-  
+
 router.isReady().then(() => {
   app.mount('#app');
 });
+// });

@@ -1,0 +1,11 @@
+.faq-container {
+   display: flex;
+   flex-wrap: wrap;
+}
+.faq-container h5 {
+    flex-basis: 100%;
+}
+.faq-container p {
+    flex-basis: 100%;
+    text-align: justify;
+}

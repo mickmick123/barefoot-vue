@@ -1,0 +1,78 @@
+.epoints-background {
+    --background: url(../../public/assets/images/epoints/epoints.png) 0 0/100% 100% no-repeat;
+}
+.epoints-container {
+    color: rgb(54, 54, 54);
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    align-content: center;
+}
+.epoints-container h5 {
+    text-align: center;
+    flex-basis: 100%;
+}
+.epoints-container span {
+    margin-top: 2vh;
+    text-align: center;
+    flex-basis: 100%;
+}
+
+.epoints-container > span > b > span{
+    color:#ff4600;
+}
+
+.epoints-item-container {
+    margin: 4vh 2vw 0 2vw;
+    display: flex;
+    flex-direction: row;
+    align-content: space-around;
+    align-items: center;
+    min-height: 35vh;
+    flex-basis: 45%;
+    width: 47%;
+    background-color: #fff;
+    border-radius: 5%;
+    flex-wrap: wrap;
+}
+.epoints-item-container ion-img {
+    flex-basis: 100%;
+    height: 10vh;
+    margin-top: 2vh
+}
+.epoints-item-container h5 {
+    font-size: 2vh;
+}
+.epoints-p-container {
+    height: 10vh;
+}
+.epoints-item-container p {
+    flex-basis: 100%;
+    color:rgb(66, 65, 65);
+    font-size: 2vh;
+    padding: 1vw;
+    text-align: center;
+}
+.epoints-item-container-botton {
+    display: flex;
+    height: 15vh;
+    flex-wrap: wrap;
+    flex-direction: row;
+    width: 100%;
+}
+.epoints-item-container-botton ion-button {
+    flex-basis: 100%;
+    width: 100%;
+    padding: 0.5vw;
+    font-size: 1.5vh;
+    align-self: center;
+}
+.epoints-learn-more {
+    flex-basis: 100%;
+    text-align: center;
+    margin-top: 8vh;
+    border: 1px solid red;
+    border-radius: 15px;
+    padding: 2vh;
+}

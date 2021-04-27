@@ -1,0 +1,22 @@
+.setting-menu-container {
+    display: flex;
+    flex-direction: row;
+}
+
+.setting-menu {
+    display: flex;
+    flex-direction: row;
+    flex-basis: 100%;
+    padding: 1rem;
+    min-height: 10vh;
+    box-shadow: inset 1px 1px 1px 1px rgba(186, 183, 183, 0.16);
+    width: 90%;
+    align-items: center;
+}
+
+.setting-menu span {
+    flex-basis: 95%;
+}
+.setting-menu ion-icon {
+    flex-basis: 5%;
+}

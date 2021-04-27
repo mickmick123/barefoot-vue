@@ -1,0 +1,33 @@
+.login-input {
+    padding: 3vh 5vw 0 5vw;
+}
+.login-button-container {
+    display: flex;
+    align-content: stretch;
+    flex-direction: column;
+    padding: 0 5vw 0 5vw;
+}
+.login-button-container ion-button {
+    min-height: 7vh;
+}
+.login-button-container > ion-button:last-child {
+    --background: #4267B2;
+}
+.login-logo {
+    margin-top: 3vh;
+}
+.login-forgot-container, .login-signup-container {
+    margin-top: 3vh;
+    display: flex;
+    align-content: center;
+    flex-direction: column;
+}
+.login-forgot-container > p,  .login-signup-container > p{
+    text-align: center;
+    align-self: stretch;
+    font-size: smaller;
+    font-weight: 600;
+}
+.login-signup-container {
+    margin-top: 1vh;
+}

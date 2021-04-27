@@ -1,0 +1,11 @@
+.text-area-container > ion-item {
+    box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.16), 0 0 4px rgba(0, 0, 0, 0.45);
+    border-radius: 5%;
+    padding: unset;
+}
+
+.event-camera {
+    position: fixed;
+    bottom: 7vh;
+    right: 2vw;
+}

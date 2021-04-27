@@ -1,0 +1,20 @@
+.proximity-container ion-range {
+    --bar-height: 5px;
+
+}
+.proximity-container ion-item {
+    flex-basis: 100%;
+    border-bottom: rgba(84, 87, 87, 0.205) 2px solid;
+}
+.proximity-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding-top: 2vh;
+}
+.proximity-container span:first-child{
+    flex-basis: 80%;
+}
+.proximity-container span:last-child{
+    flex-basis: 20%;
+}

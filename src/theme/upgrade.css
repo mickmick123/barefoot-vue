@@ -1,0 +1,66 @@
+.upgrade-background {
+    --background: url(../../public/assets/images/upgrade/upgrade.png) 0 0/100% 100% no-repeat;
+}
+.upgrade-container {
+    color: #fff;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    align-content: center;
+}
+.upgrade-container h5 {
+    text-align: center;
+    flex-basis: 100%;
+}
+.upgrade-container span {
+    margin-top: 2vh;
+    text-align: center;
+    flex-basis: 100%;
+}
+
+.upgrade-container > span > b > span{
+    color:aqua;
+}
+
+.upgrade-item-container {
+    margin: 4vh 2vw 0 2vw;
+    display: flex;
+    flex-direction: row;
+    align-content: space-around;
+    align-items: center;
+    min-height: 50vh;
+    flex-basis: 45%;
+    width: 47%;
+    background-color: #fff;
+    border-radius: 5%;
+    flex-wrap: wrap;
+}
+.upgrade-item-container ion-img {
+    flex-basis: 100%;
+    height: 15vh;
+    margin-top: 2vh
+}
+.upgrade-p-container {
+    height: 20vh;
+}
+.upgrade-item-container p {
+    flex-basis: 100%;
+    color:rgb(66, 65, 65);
+    font-size: 2vh;
+    padding: 1vw;
+    text-align: center;
+}
+.upgrade-item-container-botton {
+    display: flex;
+    height: 15vh;
+    flex-wrap: wrap;
+    flex-direction: row;
+}
+.upgrade-item-container-botton ion-button {
+    flex-basis: 100%;
+    width: 100%;
+    padding: 0.5vw;
+    font-size: 1.5vh;
+    align-self: center;
+}

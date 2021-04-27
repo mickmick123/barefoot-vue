@@ -1,0 +1,19 @@
+.gallery-container {
+    -moz-column-width: 18em;
+    -webkit-column-width: 18em;
+    column-width: 18em;
+    -moz-column-gap: 1em;
+    -webkit-column-gap:1em;
+    column-gap: 1em;
+    margin: 5px;
+}
+.gallery-image {
+    display: inline-block;
+    width: 33.33%;
+    padding: 1px;
+}
+.gallery-button {
+    position: fixed;
+    bottom: 2vh;
+    right: 2vw;
+}

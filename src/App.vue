@@ -1,18 +1,95 @@
 <template>
-  <ion-app>
+  <menu-left contentId="main-content" menu-id="first" :showMenu="isAuth"/>
+  <ion-app id="main-content">
     <ion-router-outlet />
   </ion-app>
+   <ion-loading
+   :is-open="loading"
+    cssClass="barefoot-loading"
+  >
+  </ion-loading>
 </template>
 
 <script lang="ts">
-import { IonApp, IonRouterOutlet } from '@ionic/vue';
-import { defineComponent } from 'vue';
-
+import { IonApp, IonRouterOutlet, toastController, IonLoading } from "@ionic/vue";
+import { computed, defineComponent, onBeforeMount } from "vue";
+import { useStore } from 'vuex';
+import MenuLeft from '@/views/Authenticated/Menu/MenuLeft.vue'
+import { useRouter } from "vue-router";
 export default defineComponent({
-  name: 'App',
+  name: "App",
   components: {
     IonApp,
-    IonRouterOutlet
-  }
+    IonRouterOutlet,
+    MenuLeft,
+    IonLoading
+  },
+  setup() {
+    const store = useStore();
+    const isAuth = computed(() => store.state.users.isAuthenticated)
+    const loading = computed(() => store.state.users.loading)
+    const router = useRouter()
+    onBeforeMount(async () => {
+      store.subscribe(async (mutation: any, state: any) => {
+        if (mutation.type === "users/postingStatus") {
+          if(mutation.payload === "posted") {
+            store.commit("users/postingStatus", "idle")
+            store.commit("users/refreshData", "refresh")
+            router.push('/map')
+          }
+        }
+        if (mutation.type === "users/authError") {
+          const toast =
+            mutation.payload &&
+            mutation.payload.err &&
+            mutation.payload.err.message &&
+            mutation.payload.err.message !== "" &&
+            mutation.payload.err.message !== null &&
+            (await toastController.create({
+              message: mutation.payload.err.message,
+              duration: 2000,
+              color: "warning",
+              position: 'top',
+            }));
+
+          return toast ? toast.present() : null;
+        }
+
+        if (mutation.type === "users/appError") {
+          const toast =
+            mutation.payload &&
+            mutation.payload.err &&
+            mutation.payload.err.message &&
+            mutation.payload.err.message !== "" &&
+            mutation.payload.err.message !== null &&
+            (await toastController.create({
+              message: mutation.payload.err.message,
+              duration: 2000,
+              color: "warning",
+              position: 'top',
+            }));
+
+          return toast ? toast.present() : null;
+        }
+        if (mutation.type === "users/successMessage") {
+          const toast =
+            mutation.payload && mutation.payload !== '' &&
+            mutation.payload !== null &&
+            (await toastController.create({
+              message: mutation.payload,
+              duration: 2000,
+              color: "success",
+              position: 'top',
+            }));
+          return toast ? toast.present() : null;
+        }
+      });
+      router.push('/');
+    });
+    return {
+      loading,
+      isAuth
+    };
+  },
 });
 </script>

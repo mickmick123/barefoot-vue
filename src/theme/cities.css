@@ -1,0 +1,14 @@
+.cities-container h5{
+    text-align: center;
+}
+.fix-container {
+    max-height: 20vh;
+    min-height: 20vh;
+}
+.sub-cities-container {
+    max-height: 60vh;
+    min-height: 60vh;
+    overflow: scroll;
+    min-width: 90vw;
+    max-width: 90vw;
+}

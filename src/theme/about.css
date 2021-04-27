@@ -1,0 +1,41 @@
+.about-container {
+    padding: 0.2rem;
+}
+.about-container > ion-item {
+    box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.16), 0 0 4px rgba(0, 0, 0, 0.45);
+    border-radius: 5%;
+    padding: unset;
+}
+.about-area {
+    padding: 0 0 0 0.5rem;
+    font-size: 0.8rem;
+    margin: 0;
+}
+.about-container > h5 {
+    text-align: center;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+}
+.about-footer::before {
+    background-image: unset !important;
+}
+.about-footer {
+    display: flex !important;
+    align-content: center !important;
+    align-items: center !important;
+    flex-direction: column;
+}
+.about-footer > ion-button{
+    align-self: stretch;
+}
+.about-error-container {
+    display: flex;
+    font-size: 0.6rem;
+}
+.about-error-container > p:nth-child(1){
+    flex-basis: 50%;
+}
+.about-error-container > p:nth-child(2){
+    flex-basis: 50%;
+    text-align: right;
+}

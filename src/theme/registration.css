@@ -1,0 +1,9 @@
+.registration-button-container {
+    display: flex;
+    align-content: center;
+    flex-direction: column;
+}
+.registration-button-container > ion-button {
+    align-self: stretch;
+    min-height: 7vh;
+}

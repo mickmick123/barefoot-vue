@@ -1,0 +1,150 @@
+.event-image-container {
+    min-height: 40vh;
+    background-color: rgb(184, 184, 184);
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+.event-title-container {
+    min-height: 20vh;
+    background-color: rgb(63, 55, 55);
+    display: flex;
+    flex-direction: row;
+    color: #fff;
+    padding: 5px;
+    align-items: center;
+    align-content: space-between;
+    flex-wrap: wrap;
+    width: 100%;
+    /* background: linear-gradient(#e7eff948, #e7eff969 0%, #49323275 74%) !important; */
+}
+.event-title-container h5 {
+    align-self: flex-start;
+    flex-basis: 90%;
+    margin-bottom: 0;
+}
+.event-title-container .event-star {
+    flex-basis: 10%;
+    display: flex;
+    align-content: center;
+    align-items: center;
+}
+.event-title-container > .event-distance  {
+    display: flex;
+    flex-basis: 100%;
+    flex-wrap: wrap;
+}
+.event-title-container > .event-distance > p {
+    flex-basis: 100%;
+    font-size: 12px;
+    font-weight: 600;
+    margin: 0;
+    padding:0;
+}
+.event-title-container > .event-distance > p:nth-child(1) {
+    flex-basis: 100%;
+}
+.event-title-container > .event-distance > p:nth-child(2) {
+    flex-basis: 70%;
+}
+.event-title-container > .event-distance > p:nth-child(3) {
+    flex-basis: 30%;
+    align-self: flex-end;
+    color: greenyellow;
+    font-style: italic;
+}
+.event-title-container .event-star ion-icon {
+    font-size: 15px;
+    color: yellow;
+}
+.event-title-container .event-star span {
+    font-size: 17px;
+    font-weight: 600;
+    padding-left: 3px;
+}
+.event-title-container > .event-address {
+    flex-basis: 100%;
+    font-size: 12px;
+}
+
+.event-title-container > .event-address > p {
+    margin: 1px;
+}
+
+.event-chat-container {
+    min-width: 10vh;
+    display: flex;
+    align-items: center;
+    align-content: center;
+    flex-wrap: wrap;
+    padding:10px;
+    border-bottom: 2px rgba(131, 123, 123, 0.493) solid;
+}
+.event-chat-container .event-atendies{
+    flex-basis: 54%;
+    margin: 0;
+    padding: 5px;
+    display: flex;
+}
+.event-chat-container .event-atendies span{
+    flex-basis: 100%;
+}
+.event-chat-container .event-atendies span > ion-icon{
+    margin-right: 5px;
+}
+
+.event-chat-container .event-atendies span:nth-child(1) > ion-icon{
+    color:rgb(3, 91, 253);
+}
+.event-chat-container .event-atendies span:nth-child(2) > ion-icon{
+    color:rgb(253, 3, 240);
+}
+.event-chat-container .event-atendies span:nth-child(3) > ion-icon{
+    color:rgb(253, 186, 3);
+}
+.event-chat-container ion-button {
+    flex-basis: 30%;
+}
+.event-content {
+    min-height: 30vh;
+    max-height: 30vh;
+    overflow: auto;
+    padding-left: 5px;
+    padding-right: 3px;
+}
+.event-content p {
+    font-size: 14px;
+    text-align: left;
+    text-indent: 15px;
+    line-height: 1.3;
+}
+.event-main-container {
+    overflow: hidden !important;
+    height: 100vh;
+}
+.event-menu-container {
+    position: absolute;
+    height: 5vh;
+    left: 0;
+    top: 0;
+    padding: 5px;
+}
+.event-menu-container ion-icon {
+    padding: 0 5px 0 5px;
+    margin: 0 3px 0 3px;
+    color: rgb(255, 255, 255);
+    font-size: 25px !important;
+    border-radius: 5px;
+    background-color: rgba(0, 0, 0, 0.541);
+}
+.event-menu-container-right {
+    position: absolute;
+    height: 5vh;
+    right: 0;
+    top: 0;
+    padding: 5px;
+}
+.event-menu-container-right ion-icon {
+    padding: 0 0 0 5px;
+    color: rgb(155, 155, 155);
+    font-size: 25px !important;
+}

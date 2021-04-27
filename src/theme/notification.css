@@ -1,0 +1,18 @@
+.notification-item-container ion-note {
+    margin-left: 17px;
+    margin-top: 0;
+    padding-top: 0;
+    font-size: 1.8vh;
+}
+.notification-item-container ion-label{
+    padding-bottom: 0;
+    margin-bottom: 0;
+    font-size: 2vh;
+}
+.notification-item-container {
+    border-bottom: rgba(61, 61, 61, 0.178) 1px solid;
+    padding-bottom: 1vh;
+}
+.notification-item-container ion-toggle {
+    --background: #b1aaa7 !important;
+}

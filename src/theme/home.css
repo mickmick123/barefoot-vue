@@ -1,0 +1,35 @@
+.home-header {
+    align-self: stretch;
+    text-align: center;
+}
+.home-sub-content {
+    display: flex;
+    align-content: center;
+    margin: 1rem 0.7rem 1rem 0.7rem;
+    font-size: 2.3vh;
+}
+.home-sub-content > .home-image {
+    flex-basis: 25%;
+    padding: 0.8rem;
+}
+.home-sub-content > p {
+    flex-basis: 75%;
+}
+.home-button-container {
+    display: flex;
+    align-content: center;
+    flex-direction: column;
+    margin: 1rem 1rem 0 1rem;
+}
+
+.home-login {
+    display: flex;
+    align-content: center;
+    flex-direction: column;
+}
+.home-login > p {
+    align-self: center;
+    text-align: center;
+    font-size: 2vh;
+    font-weight: 600;
+}

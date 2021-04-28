@@ -10,13 +10,17 @@
         <div class="event-menu-container-right">
           <ion-icon :src="closeCircle" @click="router.push('/map')" />
         </div>
-
+        
         <div
           class="event-image-container"
           :style="`background-image: url(${
             (event && event.banner) || defaultImage
           })`"
-        ></div>
+        >
+        <div class="event-meter">
+             <ion-progress-bar :value="(manCount.length+womanCount.length+unknownCount).length/100"></ion-progress-bar>
+        </div>
+        </div>
         <div class="event-title-container">
           <h5>{{ event && event.title }}</h5>
           <div class="event-star">
@@ -81,7 +85,7 @@
 </template>
 
 <script lang="ts">
-import { IonContent, IonPage, IonIcon, IonButton, alertController } from "@ionic/vue";
+import { IonContent, IonPage, IonIcon, IonButton, alertController, IonProgressBar } from "@ionic/vue";
 import { computed, defineComponent, ref, onUpdated, watchEffect, onMounted, onBeforeMount } from "vue";
 import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
@@ -95,6 +99,7 @@ export default defineComponent({
     IonIcon,
     IonButton,
     SkeletonLoader,
+    IonProgressBar,
   },
   setup() {
     const store = useStore();

@@ -11,21 +11,21 @@
     <ion-content :fullscreen="true" class="ion-padding">
         <div class="proximity-container">
             <span>Bars</span>
-            <span>5 KM</span>
+            <span>{{proximity.bar}} KM</span>
             <ion-item lines="none">
                 <ion-range @ionBlur="handleChange" v-model="proximity.bar" min="5" max="100" color="primary"></ion-range>
             </ion-item>
         </div>
         <div class="proximity-container">
             <span>Restaurant and Cafes</span>
-            <span>5 KM</span>
+            <span>{{proximity.resto}} KM</span>
             <ion-item lines="none">
                 <ion-range @ionBlur="handleChange" v-model="proximity.resto" min="5" max="100" color="primary"></ion-range>
             </ion-item>
         </div>
         <div class="proximity-container">
             <span>Events</span>
-            <span>5 KM</span>
+            <span>{{proximity.event}} KM</span>
             <ion-item lines="none">
                 <ion-range @ionBlur="handleChange" v-model="proximity.event" min="5" max="100" color="primary"></ion-range>
             </ion-item>
@@ -66,7 +66,7 @@ export default defineComponent({
       const router = useRouter()
       const store = useStore()
       const oldProximity = computed(() => store.state.users.user.proximity)
-      const proximity = ref(JSON.parse(oldProximity.value));
+      const proximity = ref(oldProximity.value);
       const handleChange = async () => {
           const data = {
               bar: proximity.value.bar,

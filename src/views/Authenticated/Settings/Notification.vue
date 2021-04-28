@@ -69,7 +69,7 @@ export default defineComponent({
       
       onMounted(() => {
           if(user.value.notifications) {
-              notification.value = JSON.parse(user.value.notifications)
+              notification.value = user.value.notifications
           } else {
              notification.value = [
                 {

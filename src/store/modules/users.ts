@@ -606,7 +606,7 @@ export default {
           .collection("users")
           .doc(state.user.id)
           .update({
-            notifications: JSON.stringify(payload),
+            notifications: payload,
           });
         state.user.notifications = payload;
         return true;

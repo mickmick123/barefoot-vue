@@ -65,15 +65,9 @@ export default defineComponent({
   setup() {
       const router = useRouter()
       const store = useStore()
-      const oldProximity = computed(() => store.state.users.user.proximity)
-      const proximity = ref(oldProximity.value);
+      const proximity = computed(() => store.state.users.user.proximity)
       const handleChange = async () => {
-          const data = {
-              bar: proximity.value.bar,
-              event: proximity.value.event,
-              resto: proximity.value.resto
-          }
-          await store.dispatch("users/updateProximity", data);
+          await store.dispatch("users/updateProximity", proximity.value);
       }
     return {
         router,

@@ -117,15 +117,16 @@ export default defineComponent({
     const restoStatus = computed(
       () => store.state.users.user.mapSettings.resto
     );
+    const gallery = computed(() => store.state.users.gallery)
     const eventJson = computed(() => store.state.users.eventJson);
     const restoJson = computed(() => store.state.users.restoJson);
     const barsJson = computed(() => store.state.users.barsJson);
     const refreshData = computed(() => store.state.users.refreshData);
+    const loadingEvent = computed(() => store.state.events.loading);
     const searching = ref(false);
     const posting = ref(false);
     const showBubble = ref(false);
     const map = ref();
-
     const restoMarker = computed(() =>
       require("../../../public/assets/images/map/bf-resto.png")
     );
@@ -175,7 +176,6 @@ export default defineComponent({
       accessToken: mapboxgl.accessToken,
       mapboxgl: mapboxgl,
     });
-
     const postHandler = async () => {
       posting.value = posting.value ? false : true;
       searching.value = true;
@@ -240,7 +240,9 @@ export default defineComponent({
             "icon-allow-overlap": true,
           },
         });
-
+        // map.value.on("move", function (e: any) {
+        //   console.log(e)
+        // })
         map.value.on("click", "restos", function (e: any) {
           const coordinates = e.features[0].geometry.coordinates.slice();
           const description = e.features[0].properties.description;
@@ -433,6 +435,24 @@ export default defineComponent({
       map.value.addControl(geocoder);
       map.value.on("idle", async function () {
         map.value.resize();
+        if(loadingEvent.value === 'idle'){
+          store.commit('events/loadingEvent', 'loading')
+          store.dispatch('users/getGeoJsonEvents', {latitude: map.value.getCenter().lat, longitude: map.value.getCenter().lng}).then(() => {
+            map.value.getSource("events").setData(eventJson.value);
+          })
+          store.dispatch('users/getGeoJsonBars', {latitude: map.value.getCenter().lat, longitude: map.value.getCenter().lng}).then(() => {
+            map.value.getSource("bars").setData(barsJson.value);
+          })
+          store.dispatch('users/getGeoJsonResto', {latitude: map.value.getCenter().lat, longitude: map.value.getCenter().lng}).then(() => {
+            map.value.getSource("restos").setData(restoJson.value);
+          })
+          console.log('loading events')
+          setTimeout(() => {
+             store.commit('events/loadingEvent', 'idle')
+          }, 7000);
+         
+        }
+        
         try {
           markerController();
         } catch (error) {
@@ -446,6 +466,11 @@ export default defineComponent({
         loadRestos();
         loadBars();
       });
+
+      map.value.on("dragend", async function () {
+        store.commit('events/loadingEvent', 'idle')
+      });
+
     });
     watchEffect(() => {
       if (refreshData.value === "refresh") {

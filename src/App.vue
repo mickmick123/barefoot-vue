@@ -12,10 +12,14 @@
 
 <script lang="ts">
 import { IonApp, IonRouterOutlet, toastController, IonLoading } from "@ionic/vue";
-import { computed, defineComponent, onBeforeMount } from "vue";
+import { computed, defineComponent, onBeforeMount, onMounted } from "vue";
 import { useStore } from 'vuex';
 import MenuLeft from '@/views/Authenticated/Menu/MenuLeft.vue'
 import { useRouter } from "vue-router";
+import  fcm  from './services/fcm';
+import { Plugins } from '@capacitor/core';
+const { App, BackgroundTask } = Plugins;
+
 export default defineComponent({
   name: "App",
   components: {
@@ -29,7 +33,28 @@ export default defineComponent({
     const isAuth = computed(() => store.state.users.isAuthenticated)
     const loading = computed(() => store.state.users.loading)
     const router = useRouter()
+    onMounted(() => {
+      App.addListener('appStateChange', (state) => {
+        
+        if (!state.isActive) {
+  
+          const taskId = BackgroundTask.beforeExit(async () => {
+
+            const start = new Date().getTime();
+            for (let i = 0; i < 1e18; i++) {
+              if ((new Date().getTime() - start) > 20000){
+                break;
+              }
+            }
+            BackgroundTask.finish({
+              taskId
+            });
+          });
+        }
+      })
+    })
     onBeforeMount(async () => {
+      fcm.pushInit()
       store.subscribe(async (mutation: any, state: any) => {
         if (mutation.type === "users/postingStatus") {
           if(mutation.payload === "posted") {
@@ -80,6 +105,18 @@ export default defineComponent({
               duration: 2000,
               color: "success",
               position: 'top',
+            }));
+          return toast ? toast.present() : null;
+        }
+        if (mutation.type === "users/toast") {
+          const toast =
+            mutation.payload && mutation.payload !== '' &&
+            mutation.payload !== null &&
+            (await toastController.create({
+              message: mutation.payload,
+              duration: 2000,
+              color: "light",
+              position: 'bottom',
             }));
           return toast ? toast.present() : null;
         }

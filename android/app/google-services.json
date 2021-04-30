@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "890896973016",
+    "firebase_url": "https://barefoot-dev-299405-default-rtdb.firebaseio.com",
+    "project_id": "barefoot-dev-299405",
+    "storage_bucket": "barefoot-dev-299405.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:890896973016:android:8ca94f0add5333e5d6ebad",
+        "android_client_info": {
+          "package_name": "barefoot.com.prod"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "890896973016-iacp0i3ivetk1u9c8fq27f3g4qj0p3gd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCS3QpX4C5NB6pIn6_rRkGwGjBWxy7X-v4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "890896973016-iacp0i3ivetk1u9c8fq27f3g4qj0p3gd.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "890896973016-1sk53qgahcl3oln3akdai5jqvmk1r53m.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.barefoot.app"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

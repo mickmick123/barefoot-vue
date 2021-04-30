@@ -14,7 +14,7 @@ export function usePhotoGallery() {
     const takePhoto = async (id: any, gallery: boolean) => {
       const cameraPhoto = await Camera.getPhoto({
         resultType: CameraResultType.DataUrl,
-        source: CameraSource.Camera,
+        source: CameraSource.Prompt,
         quality: 100
       });
       const fileName = !gallery ? id +'.jpeg' : new Date().getTime() + id + '_.jpeg';

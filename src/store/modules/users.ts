@@ -1,7 +1,8 @@
 import { loadingController } from "@ionic/vue";
 import firebase from "firebase/app";
 import { Plugins } from "@capacitor/core";
-import { State } from "ionicons/dist/types/stencil-public-runtime";
+import * as geofire from "geofire-common";
+import { useLocalNotification } from "@/composables/localNotif";
 const { Geolocation } = Plugins;
 
 export default {
@@ -14,6 +15,7 @@ export default {
     user: null,
     authChecked: false,
     successMessage: "",
+    toast: "",
     gallery: [],
     coordinates: [],
     cities: [],
@@ -102,6 +104,9 @@ export default {
     successMessage(state: any, payload: any) {
       state.successMessage = payload;
     },
+    toast(state: any, payload: any) {
+      state.toast = payload;
+    },
     appError(state: any, payload: any) {
       state.error = payload;
     },
@@ -178,11 +183,13 @@ export default {
       }
     },
     addEvent(state: any, payload: any) {
-        state.events.push(payload);
+      state.events.push(payload);
     },
     updateLike(state: any, payload: any) {
-     const objIndex = state.events.findIndex(((obj: any) => obj.id == payload.eventId));
-      state.events[objIndex].like = payload.like
+      const objIndex = state.events.findIndex(
+        (obj: any) => obj.id == payload.eventId
+      );
+      state.events[objIndex].like = payload.like;
     },
     subCity(state: any, payload: any) {
       if (!state.subCities.some((e: any) => e.name === payload.name)) {
@@ -223,14 +230,20 @@ export default {
   },
   actions: {
     async savePost({ commit, state }: any) {
+      useLocalNotification("Posting","Your post is in progress, Well notify you once its done.", 0 ,0)
       commit("postingStatus", "on process");
-      commit("setLoading", true);
       commit("successMessage", "");
-      const eventId = state.user.id+'_'+new Date().getTime()
+      const eventId = state.user.id + "_" + new Date().getTime();
       const storageRef = firebase.storage().ref();
       const imageRef = storageRef.child(
         `gallery/events/${state.postData.img.filepath}`
       );
+      const eventRef =
+        state.postData.category === "events"
+          ? firebase.firestore().collection("events")
+          : state.postData.category === "bars"
+          ? firebase.firestore().collection("bars")
+          : firebase.firestore().collection("resto");
       imageRef
         .putString(
           state.postData.img.webviewPath,
@@ -242,7 +255,7 @@ export default {
             .ref(`gallery/events/${state.postData.img.filepath}`)
             .getDownloadURL()
             .then(async (url) => {
-              const image = url
+              const image = url;
               const postData = {
                 type: "Feature",
                 properties: {
@@ -251,11 +264,16 @@ export default {
                   description: `<div class="map-event-container">
                   <img src="${image}" />
                   <h5>${state.postData.title}</h5>
-                  <p>${state.postData.description.length > 150 ? 
-                    state.postData.description.substring(0, 150 - 3) + "...": state.postData.description }</p>
+                  <p>${
+                    state.postData.description.length > 150
+                      ? state.postData.description.substring(0, 150 - 3) + "..."
+                      : state.postData.description
+                  }</p>
                   <div class="date-container">
                   <h5>Event Schedule</h5>
-                  <p>Start: ${state.postData.startDate} ${state.postData.startTime}<p>
+                  <p>Start: ${state.postData.startDate} ${
+                    state.postData.startTime
+                  }<p>
                   <p>End: ${state.postData.endDate} ${state.postData.endTime}<p>
                   </div>
                 </div>`,
@@ -269,65 +287,46 @@ export default {
                 },
               };
 
-              switch (state.postData.category) {
-                case "events":
-                  state.eventJson.features.push({ ...postData });
-                  break;
-                case "bars":
-                  state.barsJson.features.push({ ...postData });
-                  break;
-                default:
-                  state.restoJson.features.push({ ...postData });
-                  break;
-              }
-
               try {
-                await firebase
-                  .firestore()
-                  .collection("barefoot")
-                  .doc(state.postData.category)
+                await eventRef
+                  .doc(eventId)
                   .set({
-                    value:
-                      state.postData.category === "events"
-                        ? JSON.stringify(state.eventJson)
-                        : state.postData.category === "bars"
-                        ? JSON.stringify(state.barsJson)
-                        : JSON.stringify(state.restoJson),
+                    author: state.user.id,
+                    name: state.user.name,
+                    eventId: eventId,
+                    category: state.postData.category,
+                    address: state.postData.address,
+                    description: state.postData.description,
+                    title: state.postData.title,
+                    startDate: state.postData.startDate,
+                    endDate: state.postData.endDate,
+                    startTime: state.postData.startTime,
+                    endTime: state.postData.endTime,
+                    banner: image,
+                    coordinates: {
+                      latitude: parseFloat(state.postData.lat.toFixed(6)),
+                      longitude: parseFloat(state.postData.lng.toFixed(6)),
+                    },
+                    geohash: geofire.geohashForLocation(
+                      [
+                        parseFloat(state.postData.lat.toFixed(6)),
+                        parseFloat(state.postData.lng.toFixed(6)),
+                      ],
+                      6
+                    ),
+                    likes: 0,
+                    attendies: [],
+                    guests: 0,
+                    html: JSON.stringify({ ...postData }),
                   })
-                  .then(async () => {
-                    await firebase
-                      .firestore()
-                      .collection("events")
-                      .doc(eventId)
-                      .set({
-                        author: state.user.id,
-                        eventId: eventId,
-                        address: state.postData.address,
-                        description: state.postData.description,
-                        title: state.postData.title,
-                        startDate: state.postData.startDate,
-                        endDate: state.postData.endDate,
-                        startTime: state.postData.startTime,
-                        endTime: state.postData.endTime,
-                        banner: image,
-                        coordinates: {
-                          latitude: state.postData.lat.toFixed(6),
-                          longitude:  state.postData.lng.toFixed(6)
-                        },
-                        likes: 0,
-                        attendies: [],
-                        guests: 0,
-                      })
-                      .then(() => {
-                        commit("setLoading", false);
-                        commit("successMessage", "Event has been posted.");
-                        commit("postingStatus", "posted");
-                        return true;
-                      });
+                  .then(() => {
+                    commit("successMessage", "Event has been posted.");
+                    commit("postingStatus", "posted");
+                    useLocalNotification("Posting","Your event is now posted",0,0)
+                    return true;
                   });
               } catch (err) {
                 commit("postingStatus", "idle");
-                commit("setLoading", false);
                 commit("appError", { err });
               }
             });
@@ -396,6 +395,10 @@ export default {
     },
     async getCurrentPosition({ state }: any) {
       await Geolocation.getCurrentPosition().then(async (coordinates) => {
+        const hash = geofire.geohashForLocation(
+          [coordinates.coords.latitude, coordinates.coords.longitude],
+          6
+        );
         const newCoords = {
           accuracy: coordinates.coords.accuracy,
           latitude: coordinates.coords.latitude,
@@ -408,6 +411,7 @@ export default {
             .doc(state.user.id)
             .update({
               coordinates: newCoords,
+              geohash: hash,
             })
             .then(() => {
               state.user.coordinates = newCoords;
@@ -439,12 +443,13 @@ export default {
     async getUserEvents({ commit, state }: any) {
       const events = await firebase
         .firestore()
-        .collection("users").doc(state.user.id)
+        .collection("users")
+        .doc(state.user.id)
         .collection("events")
         .get();
 
-        events.forEach((doc) => {
-        commit("addEvent", {id: doc.id, ...doc.data()});
+      events.forEach((doc) => {
+        commit("addEvent", { id: doc.id, ...doc.data() });
       });
     },
     async getSelectedCities({ commit, state }: any, payload: any) {
@@ -640,7 +645,7 @@ export default {
           .collection("users")
           .doc(state.user.id)
           .update({
-            proximity: JSON.stringify(payload),
+            proximity: payload,
           });
         state.user.proximity = payload;
         return true;
@@ -754,6 +759,10 @@ export default {
       }
     },
     async saveGallery({ state, commit }: any, payload: any) {
+      commit(
+        "toast",
+        "Your Image is being uploaded, We'll notify you once its done"
+      );
       const storageRef = firebase.storage().ref();
       const imageRef = storageRef.child(`gallery/${payload.filepath}`);
       return imageRef
@@ -773,6 +782,7 @@ export default {
                 filepath: payload.filepath,
                 webviewPath: payload.webviewPath,
               });
+              commit("toast", "New Image has been added to your gallery");
             });
         });
     },
@@ -785,43 +795,157 @@ export default {
         .get()
         .then((snapshot) => {
           snapshot.docs.map(async (doc) => {
-            const url = await firebase
+            await firebase
               .storage()
               .ref(`gallery/${doc.data().fileName}`)
-              .getDownloadURL();
-            state.gallery.push({
-              filepath: doc.data().fileName,
-              webviewPath: url,
-            });
+              .getDownloadURL()
+              .then((url) => {
+                state.gallery.push({
+                  filepath: doc.data().fileName,
+                  webviewPath: url,
+                });
+              });
           });
         });
     },
-    async getGeoJsonEvents({ state }: any) {
-      const events = await firebase
-        .firestore()
-        .collection("barefoot")
-        .doc("events")
-        .get();
-      if (events.data()) state.eventJson = JSON.parse(events.data()?.value);
+    async getGeoJsonEvents({ state }: any, payload: any) {
+      const center = [payload.latitude, payload.longitude];
+      const radiusInM = state.user.proximity.event * 1000;
+      const bounds = geofire.geohashQueryBounds(center, radiusInM);
+      const promises = [];
+      for (const b of bounds) {
+        const q = firebase
+          .firestore()
+          .collection("events")
+          .orderBy("geohash")
+          .startAt(b[0])
+          .endAt(b[1]);
+
+        promises.push(q.get());
+      }
+      Promise.all(promises)
+        .then((snapshots) => {
+          const matchingDocs = [];
+
+          for (const snap of snapshots) {
+            for (const doc of snap.docs) {
+              const lat = doc.get("coordinates.latitude");
+              const lng = doc.get("coordinates.longitude");
+
+              // We have to filter out a few false positives due to GeoHash
+              // accuracy, but most will match
+              const distanceInKm = geofire.distanceBetween([lat, lng], center);
+              const distanceInM = distanceInKm * 1000;
+              if (distanceInM <= radiusInM) {
+                if (doc.exists) matchingDocs.push(JSON.parse(doc.data()?.html));
+              }
+            }
+          }
+
+          return matchingDocs;
+        })
+        .then((matchingDocs) => {
+          // Process the matching documents
+          // [START_EXCLUDE]
+          state.eventJson.features = [];
+          state.eventJson.features.push(...matchingDocs);
+          // [END_EXCLUDE]
+        });
     },
-    async getGeoJsonResto({ state }: any) {
-      const events = await firebase
-        .firestore()
-        .collection("barefoot")
-        .doc("resto")
-        .get();
-      if (events.data()) state.restoJson = JSON.parse(events.data()?.value);
+
+    async getGeoJsonResto({ state }: any, payload: any) {
+      const center = [payload.latitude, payload.longitude];
+      const radiusInM = state.user.proximity.resto * 1000;
+      const bounds = geofire.geohashQueryBounds(center, radiusInM);
+      const promises = [];
+      for (const b of bounds) {
+        const q = firebase
+          .firestore()
+          .collection("resto")
+          .orderBy("geohash")
+          .startAt(b[0])
+          .endAt(b[1]);
+
+        promises.push(q.get());
+      }
+      Promise.all(promises)
+        .then((snapshots) => {
+          const matchingDocs = [];
+
+          for (const snap of snapshots) {
+            for (const doc of snap.docs) {
+              const lat = doc.get("coordinates.latitude");
+              const lng = doc.get("coordinates.longitude");
+
+              // We have to filter out a few false positives due to GeoHash
+              // accuracy, but most will match
+              const distanceInKm = geofire.distanceBetween([lat, lng], center);
+              const distanceInM = distanceInKm * 1000;
+              if (distanceInM <= radiusInM) {
+                if (doc.exists) matchingDocs.push(JSON.parse(doc.data()?.html));
+              }
+            }
+          }
+
+          return matchingDocs;
+        })
+        .then((matchingDocs) => {
+          // Process the matching documents
+          // [START_EXCLUDE]
+          state.restoJson.features = [];
+          state.restoJson.features.push(...matchingDocs);
+          // [END_EXCLUDE]
+        });
     },
-    async getGeoJsonBars({ state }: any) {
-      const events = await firebase
-        .firestore()
-        .collection("barefoot")
-        .doc("bars")
-        .get();
-      if (events.data()) state.barsJson = JSON.parse(events.data()?.value);
+    async getGeoJsonBars({ state }: any, payload: any) {
+      const center = [payload.latitude, payload.longitude];
+      const radiusInM = state.user.proximity.bar * 1000;
+      const bounds = geofire.geohashQueryBounds(center, radiusInM);
+      const promises = [];
+      for (const b of bounds) {
+        const q = firebase
+          .firestore()
+          .collection("bars")
+          .orderBy("geohash")
+          .startAt(b[0])
+          .endAt(b[1]);
+
+        promises.push(q.get());
+      }
+      Promise.all(promises)
+        .then((snapshots) => {
+          const matchingDocs = [];
+
+          for (const snap of snapshots) {
+            for (const doc of snap.docs) {
+              const lat = doc.get("coordinates.latitude");
+              const lng = doc.get("coordinates.longitude");
+
+              // We have to filter out a few false positives due to GeoHash
+              // accuracy, but most will match
+              const distanceInKm = geofire.distanceBetween([lat, lng], center);
+              const distanceInM = distanceInKm * 1000;
+              if (distanceInM <= radiusInM) {
+                if (doc.exists) matchingDocs.push(JSON.parse(doc.data()?.html));
+              }
+            }
+          }
+
+          return matchingDocs;
+        })
+        .then((matchingDocs) => {
+          // Process the matching documents
+          // [START_EXCLUDE]
+          state.barsJson.features = [];
+          state.barsJson.features.push(...matchingDocs);
+          // [END_EXCLUDE]
+        });
     },
     async saveAvatar({ state, commit }: any, payload: any) {
-      commit("setLoading", true);
+      commit(
+        "toast",
+        "Your Avatar is being uploaded, We'll notify you once its done"
+      );
       try {
         const storageRef = firebase.storage().ref();
         const imageRef = storageRef.child(`avatar/${payload.filepath}`);
@@ -831,7 +955,6 @@ export default {
             firebase.storage.StringFormat.DATA_URL
           )
           .then(async (snapshot) => {
-            state.user.photoUrl = payload.webviewPath;
             await firebase
               .storage()
               .ref(`avatar/${payload.filepath}`)
@@ -849,13 +972,18 @@ export default {
                       .doc(state.user.id)
                       .update({
                         avatar: payload.filepath,
+                      })
+                      .then(() => {
+                        state.user.photoUrl = payload.webviewPath;
+                        commit(
+                          "toast",
+                          "Your Avatar has been successfully uploaded"
+                        );
                       });
-                    commit("setLoading", false);
                   });
               });
           });
       } catch (err) {
-        commit("setLoading", false);
         commit("appError", { err });
       }
     },

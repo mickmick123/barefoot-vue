@@ -31,28 +31,35 @@ export default defineComponent({
     buffer.value = 0;
     const logo = computed(() => require('../../public/assets/images/login/logo.png'));
     onBeforeMount(async () => {
+       const isFromLogin = computed(() => store.state.inApp.fromLogin)
         await store.dispatch("users/doAuthCheck").then(async (user) => {
             if(user){
                  await store.dispatch('offlineWatcher/offlineListeners', user.id)
                  buffer.value = 0.25;
+                //  if(isFromLogin.value) {
+                //    await store.dispatch('users/fillGallery').then(() => {
+                //      store.commit('inApp/isFromLogin', false)
+                //    })
+                //  }
                  await store.dispatch('users/fillGallery')
                  buffer.value = 0.50;
                  await store.dispatch('users/getCountries')
                  buffer.value = 0.70;
-                 await store.dispatch('users/getGeoJsonEvents')
+                //  await store.dispatch('users/getGeoJsonEvents')
                  buffer.value = 0.80;
-                 await store.dispatch('users/getGeoJsonResto')
+                //  await store.dispatch('users/getGeoJsonResto')
                  buffer.value = 0.85;
                  await store.dispatch('users/getUserEvents')
                  buffer.value = 0.90;
-                 await store.dispatch('users/getGeoJsonBars')
+                //  await store.dispatch('users/getGeoJsonBars')
                  buffer.value = 1;
                  setTimeout(async () => {
                     router.replace('/map');
                     store.commit('users/updatingCoords', true)
-                    await store.dispatch('users/getCurrentPosition').then(() => {
-                      console.log('success')
+                    await store.dispatch('users/getCurrentPosition').then(async () => {
+                     const people = await store.dispatch('inApp/findPeople', {latitude: store.state.users.user.coordinates.latitude, longitude: store.state.users.user.coordinates.longitude})
                       store.commit('users/updatingCoords', false)
+                      console.log(people)
                     })
                   }, 500);
                  

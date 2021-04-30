@@ -1,6 +1,7 @@
 import { createStore } from 'vuex'
 import users from './modules/users'
 import events from './modules/events'
+import inApp from './modules/inApp'
 import offlineWatcher from './modules/offlineWatcher'
 export default createStore({
   state: {
@@ -13,5 +14,6 @@ export default createStore({
     users,
     offlineWatcher,
     events,
+    inApp,
   }
 })

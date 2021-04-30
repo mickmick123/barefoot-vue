@@ -121,6 +121,29 @@ const routes: Array<RouteRecordRaw> = [
     name: 'post-content',
     component: () => import('@/views/Authenticated/Posting/Content.vue')
   },
+  {
+    path: '/friends/',
+    name: 'friends',
+    component: () => import('@/views/Authenticated/Friends/Friends.vue'),
+    children:[
+      {
+        path:'',
+        redirect: 'friends-list'
+      },
+      {
+        path:'friends-list',
+        component: () => import('@/views/Authenticated/Friends/FriendsList.vue'),
+      },
+      {
+        path:'friends-request',
+        component: () => import('@/views/Authenticated/Friends/FriendsRequest.vue'),
+      },
+      {
+        path:'friends-nearby',
+        component: () => import('@/views/Authenticated/Friends/FriendsNearby.vue'),
+      },
+    ]
+  },
 ]
 
 const router = createRouter({

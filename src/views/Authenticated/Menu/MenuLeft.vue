@@ -26,7 +26,7 @@
               Profile
             </ion-label>
           </ion-item>
-          <ion-item class="menu-item" lines="none">
+          <ion-item class="menu-item" lines="none" @click="router.push('/friends/friends-list')">
             <ion-avatar slot="start">
                 <img :src="friendsIcon">
             </ion-avatar>

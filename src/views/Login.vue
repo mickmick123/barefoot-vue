@@ -61,6 +61,7 @@ export default defineComponent({
           const { credentials } = theForm.values;
           const res = await store.dispatch('users/userLogin', {...credentials });
           if(res) {
+              store.commit('inApp/isFromLogin', true)
               router.push('/')
           }
         }

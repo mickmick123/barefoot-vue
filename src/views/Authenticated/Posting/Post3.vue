@@ -77,7 +77,6 @@ export default defineComponent({
           store.commit('users/appError', 'Banner must be selected!')
       }else {
         await store.dispatch('users/savePost').then((res) => {
-         console.log(res)
            if (res) {
                router.push('/map')
            }

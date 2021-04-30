@@ -1,9 +1,9 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router';
-
 import { IonicVue } from '@ionic/vue';
-
+import { Plugins } from '@capacitor/core';
+const { SplashScreen } = Plugins;
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/vue/css/core.css';
 
@@ -42,11 +42,17 @@ import './theme/upgrade.css';
 import './theme/epoints.css';
 import './theme/event.css';
 import './theme/post.css';
+import './theme/friends.css';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
 import firebase from 'firebase';
+
 import 'firebase/firestore'
 import store from './store'
+
+SplashScreen.hide()
+window.screen.orientation.lock('portrait')
+
 const firebaseConfig = {
   apiKey: "AIzaSyADj_y1dLwMGTnnS4m-Ah1gHov6nqZnfjc",
   authDomain: "barefoot-dev-299405.firebaseapp.com",

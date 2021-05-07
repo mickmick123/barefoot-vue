@@ -12,14 +12,14 @@
 
 <script lang="ts">
 import { IonApp, IonRouterOutlet, toastController, IonLoading } from "@ionic/vue";
-import { computed, defineComponent, onBeforeMount, onMounted } from "vue";
+import { computed, defineComponent, onBeforeMount, onMounted, ref } from "vue";
 import { useStore } from 'vuex';
 import MenuLeft from '@/views/Authenticated/Menu/MenuLeft.vue'
 import { useRouter } from "vue-router";
 import  fcm  from './services/fcm';
 import { Plugins } from '@capacitor/core';
 const { App, BackgroundTask } = Plugins;
-
+const { SplashScreen } = Plugins;
 export default defineComponent({
   name: "App",
   components: {
@@ -33,6 +33,7 @@ export default defineComponent({
     const isAuth = computed(() => store.state.users.isAuthenticated)
     const loading = computed(() => store.state.users.loading)
     const router = useRouter()
+    const unsubscribe = ref();
     onMounted(() => {
       App.addListener('appStateChange', (state) => {
         
@@ -55,7 +56,11 @@ export default defineComponent({
     })
     onBeforeMount(async () => {
       fcm.pushInit()
-      store.subscribe(async (mutation: any, state: any) => {
+      unsubscribe.value = store.subscribe(async (mutation: any, state: any) => {
+        
+        if (mutation.type === "users/userLogoutSuccess") {
+          unsubscribe.value()
+        }
         if (mutation.type === "users/postingStatus") {
           if(mutation.payload === "posted") {
             store.commit("users/postingStatus", "idle")

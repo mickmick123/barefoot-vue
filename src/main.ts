@@ -43,6 +43,7 @@ import './theme/epoints.css';
 import './theme/event.css';
 import './theme/post.css';
 import './theme/friends.css';
+import './theme/chat.css';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
 import firebase from 'firebase';
@@ -50,7 +51,7 @@ import firebase from 'firebase';
 import 'firebase/firestore'
 import store from './store'
 
-SplashScreen.hide()
+
 window.screen.orientation.lock('portrait')
 
 const firebaseConfig = {
@@ -86,6 +87,7 @@ const app = createApp(App)
   .use(router);
 
 router.isReady().then(() => {
+  SplashScreen.hide()
   app.mount('#app');
 });
 // });

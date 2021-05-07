@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">My App</string>
-    <string name="title_activity_main">My App</string>
-    <string name="package_name">com.getcapacitor.myapp</string>
-    <string name="custom_url_scheme">com.getcapacitor.myapp</string>
+    <string name="app_name">Barefoot</string>
+    <string name="title_activity_main">Barefoot</string>
+    <string name="package_name">barefoot.com.prod</string>
+    <string name="custom_url_scheme">barefoot.com.prod</string>
 </resources>

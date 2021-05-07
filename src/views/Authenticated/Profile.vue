@@ -42,31 +42,31 @@
                   <ion-img :src="candy" />
                   <p>Candy</p>
                   <p>(10 points)</p>
-                  <p>x0</p>
+                  <p>x{{user.items && user.items.candy || 0}}</p>
               </div>
               <div class="profile-gift-items">
                   <ion-img :src="flower" />
                   <p>Flower</p>
                   <p>(50 points)</p>
-                  <p>x0</p>
+                  <p>x{{user.items && user.items.flower || 0}}</p>
               </div>
               <div class="profile-gift-items">
                   <ion-img :src="booze" />
                   <p>Booze</p>
                   <p>(100 points)</p>
-                  <p>x0</p>
+                  <p>x{{user.items && user.items.booze || 0}}</p>
               </div>
               <div class="profile-gift-items">
                   <ion-img :src="tickets" />
                   <p>Tickets</p>
                   <p>(500 points)</p>
-                  <p>x0</p>
+                  <p>x{{user.items && user.items.tickets || 0}}</p>
               </div>
               <div class="profile-gift-items">
                   <ion-img :src="points" />
                   <p>Points</p>
                   <p>(1000 points)</p>
-                  <p>x0</p>
+                  <p>x{{user.items && user.items.points || 0}}</p>
               </div>
           </div>
           <div class="divider">
@@ -74,7 +74,7 @@
               <ion-button @click="gotoAbout">EDIT</ion-button>
           </div>
           <div class="profile-about-container">
-              <p>{{user ? user.aboutMe : 'No self description'}}</p>
+              <p>{{user && user.aboutMe !== '' ? user.aboutMe : 'No self description'}}</p>
           </div>
           <div class="divider">
               <p>Interests</p>
@@ -83,7 +83,9 @@
           <div class="profile-interests-container">
               <div class="interests-child-container" v-if="!interests || interests.length > 0">
                 <div v-for="interest in interests" :key="interest.val">
-                  <span v-if="interest.isChecked">{{interest.val}}</span>
+                  <ion-chip v-if="interest.isChecked" color="secondary">
+                       <ion-label>{{interest.val}}</ion-label>
+                  </ion-chip>
                 </div>
               </div>
               <p v-else>No interests</p>
@@ -104,9 +106,10 @@ import {
   IonAvatar,
   menuController,
   IonButton,
+  IonChip,
 } from "@ionic/vue";
 import moment from "moment";
-import { computed, defineComponent } from "vue";
+import { computed, defineComponent, watchEffect } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import { usePhotoGallery } from '@/composables/usePhotoGallery';
@@ -120,7 +123,8 @@ export default defineComponent({
     IonToolbar,
     IonBackButton,
     IonAvatar,
-    IonButton
+    IonButton,
+    IonChip,
   },
   setup() {
       const router = useRouter()

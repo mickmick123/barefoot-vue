@@ -41,13 +41,19 @@ export default defineComponent({
                 //      store.commit('inApp/isFromLogin', false)
                 //    })
                 //  }
+                 await store.dispatch('inApp/getRequest', user.id)
+                 buffer.value = 0.35;
                  await store.dispatch('users/fillGallery')
                  buffer.value = 0.50;
                  await store.dispatch('users/getCountries')
                  buffer.value = 0.70;
+                 await store.dispatch('inApp/getFriends', user.id)
                 //  await store.dispatch('users/getGeoJsonEvents')
+                buffer.value = 0.75;
+                await store.dispatch('inApp/getMyRequest', user.id)
                  buffer.value = 0.80;
                 //  await store.dispatch('users/getGeoJsonResto')
+                await store.dispatch('users/getCurrentEpoints')
                  buffer.value = 0.85;
                  await store.dispatch('users/getUserEvents')
                  buffer.value = 0.90;
@@ -57,9 +63,8 @@ export default defineComponent({
                     router.replace('/map');
                     store.commit('users/updatingCoords', true)
                     await store.dispatch('users/getCurrentPosition').then(async () => {
-                     const people = await store.dispatch('inApp/findPeople', {latitude: store.state.users.user.coordinates.latitude, longitude: store.state.users.user.coordinates.longitude})
+                     await store.dispatch('inApp/findPeople', {latitude: store.state.users.user.coordinates.latitude, longitude: store.state.users.user.coordinates.longitude, id: store.state.users.user.id})
                       store.commit('users/updatingCoords', false)
-                      console.log(people)
                     })
                   }, 500);
                  

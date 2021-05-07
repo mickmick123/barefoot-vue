@@ -122,25 +122,48 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('@/views/Authenticated/Posting/Content.vue')
   },
   {
+    path:'/friends-plus',
+    component: () => import('@/views/Authenticated/Friends/AddFriendPlus.vue'),
+    name: 'friendsPlus'
+  },
+  {
+    path:'/friends-send-gifts',
+    component: () => import('@/views/Authenticated/Friends/SendGifts.vue'),
+    name: 'friendsSendGifts'
+  },
+  {
+    path:'/messages/:id',
+    component: () => import('@/views/Authenticated/Chats/Chat.vue'),
+    name: 'messages'
+  },
+  {
+    path:'/friends-profile',
+    component: () => import('@/views/Authenticated/Friends/Profile.vue'),
+    name: 'friendsProfile'
+  },
+  {
     path: '/friends/',
     name: 'friends',
     component: () => import('@/views/Authenticated/Friends/Friends.vue'),
     children:[
       {
         path:'',
-        redirect: 'friends-list'
+        redirect: 'friends-list',
       },
       {
         path:'friends-list',
         component: () => import('@/views/Authenticated/Friends/FriendsList.vue'),
+        name: 'friendsList'
       },
       {
         path:'friends-request',
         component: () => import('@/views/Authenticated/Friends/FriendsRequest.vue'),
+        name: 'friendsRequest'
       },
       {
         path:'friends-nearby',
         component: () => import('@/views/Authenticated/Friends/FriendsNearby.vue'),
+        name: 'friendsNearby'
       },
     ]
   },

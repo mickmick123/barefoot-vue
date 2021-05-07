@@ -6,7 +6,7 @@
     display: flex;
     align-content: center;
     margin: 1rem 0.7rem 1rem 0.7rem;
-    font-size: 2.3vh;
+    font-size: 0.9rem;
 }
 .home-sub-content > .home-image {
     flex-basis: 25%;
@@ -21,6 +21,9 @@
     flex-direction: column;
     margin: 1rem 1rem 0 1rem;
 }
+.home-button-container > ion-button {
+    height: 3rem;
+}
 
 .home-login {
     display: flex;
@@ -30,6 +33,6 @@
 .home-login > p {
     align-self: center;
     text-align: center;
-    font-size: 2vh;
+    font-size: 0.8rem;
     font-weight: 600;
 }

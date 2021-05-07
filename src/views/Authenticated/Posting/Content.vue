@@ -321,12 +321,6 @@ export default defineComponent({
           event: event.value,
           like: like.value,
         })
-        .then(() => {
-          store.commit("users/updateLike", {
-            eventId: event.value.eventId,
-            like: like.value,
-          });
-        });
     };
     return {
       user,

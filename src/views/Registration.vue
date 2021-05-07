@@ -12,11 +12,11 @@
       <div id="container">
            <personal-info-component />
            <credentials-component />
-        <div class="registration-button-container">
-            <ion-button @click="handleCreateAccount">CREATE ACCOUNT</ion-button>
-        </div>
       </div>
     </ion-content>
+    <ion-footer class="about-footer">
+      <ion-button @click="handleCreateAccount">CREATE ACCOUNT</ion-button>
+    </ion-footer>
   </ion-page>
 </template>
 
@@ -28,6 +28,7 @@ import {
   IonTitle,
   IonToolbar,
   IonBackButton,
+  IonFooter,
 } from "@ionic/vue";
 import { defineComponent } from "vue";
 import PersonalInfoComponent, {
@@ -51,6 +52,7 @@ export default defineComponent({
     IonBackButton,
     PersonalInfoComponent,
     CredentialsComponent,
+    IonFooter,
   },
   setup() {
     // mapActions("user", ["createAccount"]);

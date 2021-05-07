@@ -2,9 +2,10 @@ import { loadingController } from "@ionic/vue";
 import firebase from "firebase/app";
 import { Plugins } from "@capacitor/core";
 import * as geofire from "geofire-common";
-import { useLocalNotification } from "@/composables/localNotif";
+import * as localNotif from '@/composables/localNotification';
+const { triggerNotification } = new localNotif.LocalNotification
 const { Geolocation } = Plugins;
-
+import moment from 'moment';
 export default {
   namespaced: true,
   state: {
@@ -53,8 +54,12 @@ export default {
     posting: "idle",
     refreshData: "idle",
     formProcess: [false, false, false],
+    epoints: 0,
   },
   mutations: {
+    fillEpoints(state: any, payload: any) {
+      state.epoints = payload;
+    },
     changeEventStatus(state: any, payload: any) {
       switch (payload) {
         case "resto":
@@ -73,6 +78,9 @@ export default {
             : true;
           break;
       }
+    },
+    async removeFriend(state: any, payload: any){
+      state.myFriends.filter((friend: any)=> { return friend.id !== payload.id});
     },
     async formProcess(state: any, payload: any) {
       if (payload.status === "new") {
@@ -229,8 +237,14 @@ export default {
     },
   },
   actions: {
+    async getCurrentEpoints({commit, state}: any) {
+      firebase.firestore().collection("epoints").doc(state.user.id).get().then((snapshot) => {
+        if(snapshot.exists)
+          commit('fillEpoints', snapshot.data()?.current)
+      })
+    },
     async savePost({ commit, state }: any) {
-      useLocalNotification("Posting","Your post is in progress, Well notify you once its done.", 0 ,0)
+      triggerNotification('Barefoot', 'Your post is in Queue, you will be notified once its done', 1000, 0)
       commit("postingStatus", "on process");
       commit("successMessage", "");
       const eventId = state.user.id + "_" + new Date().getTime();
@@ -322,12 +336,13 @@ export default {
                   .then(() => {
                     commit("successMessage", "Event has been posted.");
                     commit("postingStatus", "posted");
-                    useLocalNotification("Posting","Your event is now posted",0,0)
+                    triggerNotification('Barefoot', 'Your post has been successfully approved', 1000, 0)
                     return true;
                   });
               } catch (err) {
                 commit("postingStatus", "idle");
                 commit("appError", { err });
+                triggerNotification('Barefoot', 'Your post has been denied', 1000, 0)
               }
             });
         });
@@ -394,41 +409,49 @@ export default {
       }
     },
     async getCurrentPosition({ state }: any) {
-      await Geolocation.getCurrentPosition().then(async (coordinates) => {
-        const hash = geofire.geohashForLocation(
-          [coordinates.coords.latitude, coordinates.coords.longitude],
-          6
-        );
-        const newCoords = {
-          accuracy: coordinates.coords.accuracy,
-          latitude: coordinates.coords.latitude,
-          longitude: coordinates.coords.longitude,
-        };
-        try {
-          await firebase
-            .firestore()
-            .collection("users")
-            .doc(state.user.id)
-            .update({
-              coordinates: newCoords,
-              geohash: hash,
-            })
-            .then(() => {
-              state.user.coordinates = newCoords;
-            });
-        } catch (error) {
-          await firebase
-            .firestore()
-            .collection("users")
-            .doc(state.user.id)
-            .set({
-              coordinates: newCoords,
-            })
-            .then(() => {
-              state.user.coordinates = newCoords;
-            });
-        }
-      });
+      if(state.user){
+        Geolocation.watchPosition({enableHighAccuracy: true, timeout: 1000}, async (position, err) => {
+          console.log(position)
+          try {
+            const hash = geofire.geohashForLocation(
+              [position.coords.latitude, position.coords.longitude],
+              6
+            );
+            const newCoords = {
+              accuracy: position.coords.accuracy,
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude,
+            };
+            state.user.coordinates = newCoords;
+            await firebase
+              .firestore()
+              .collection("users")
+              .doc(state.user.id)
+              .update({
+                coordinates: newCoords,
+                geohash: hash,
+              })
+          } catch (error) {
+            try {
+              const newCoords = {
+                accuracy: position.coords.accuracy,
+                latitude: position.coords.latitude,
+                longitude: position.coords.longitude,
+              };
+              await firebase
+                .firestore()
+                .collection("users")
+                .doc(state.user.id)
+                .set({
+                  coordinates: newCoords,
+                })
+            } catch (error) {
+              console.log('error from coordinate')
+            }
+          
+          }
+        });
+      }
     },
     async getCountries({ commit }: any) {
       const countries = await firebase
@@ -1083,8 +1106,9 @@ export default {
                 });
               });
             const userInfo = {
-              firstName: payload.firstName,
-              lastName: payload.lastName,
+              firstName: payload.firstName.toLowerCase(),
+              lastName: payload.lastName.toLowerCase(),
+              fullName: payload.firstName.toLowerCase() + ' ' + payload.lastName.toLowerCase(),
               gender: payload.gender,
               civilStatus: payload.civilStatus,
               birthDate: payload.birthDate,

@@ -204,6 +204,11 @@ export default {
                     transaction.update(eventRef.doc(payload.event.eventId), { likes: likes });
                 });
                 }).then(() => {
+                  commit("users/updateLike", {
+                    eventId: payload.event.eventId,
+                    like: payload.like,
+                  },
+                  {root: true});
                     console.log("Transaction successfully committed!");
                 }).catch((error) => {
                     console.log("Transaction failed: ", error);

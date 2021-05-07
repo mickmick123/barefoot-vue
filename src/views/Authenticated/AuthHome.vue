@@ -93,6 +93,8 @@ import { useStore } from "vuex";
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import "@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css";
 import { useRouter } from "vue-router";
+import * as localNotif from '@/composables/localNotification'
+import moment from "moment";
 export default defineComponent({
   name: "AuthHome",
   components: {
@@ -105,7 +107,7 @@ export default defineComponent({
     IonFabList,
   },
   setup() {
-    mapboxgl.accessToken =
+    mapboxgl.accessToken = 
       "pk.eyJ1IjoibWlja21pY2sxOTg5IiwiYSI6ImNrZnlzaHBrZDBkaXIyem52ZWdhZnBrYzQifQ.2E9EKB7Lx14VBMZfRuRrVQ";
     const store = useStore();
     const user = computed(() => store.state.users.user);
@@ -127,6 +129,7 @@ export default defineComponent({
     const posting = ref(false);
     const showBubble = ref(false);
     const map = ref();
+    const { init, triggerNotification } = new localNotif.LocalNotification
     const restoMarker = computed(() =>
       require("../../../public/assets/images/map/bf-resto.png")
     );
@@ -414,11 +417,10 @@ export default defineComponent({
         map.value.setLayoutProperty("restos", "visibility", "none");
       }
     };
-
-    onMounted(() => {
+    const initMap = (mapStyle: string) => {
       map.value = new mapboxgl.Map({
         container: "map",
-        style: "mapbox://styles/mickmick1989/ckg6chu5e1uqw19lo40u1od9a",
+        style: mapStyle,
         center: [
           store.state.users.user.coordinates.longitude !== undefined
             ? store.state.users.user.coordinates.longitude
@@ -434,29 +436,33 @@ export default defineComponent({
       map.value.addControl(geoLocator);
       map.value.addControl(geocoder);
       map.value.on("idle", async function () {
-        map.value.resize();
-        if(loadingEvent.value === 'idle'){
-          store.commit('events/loadingEvent', 'loading')
-          store.dispatch('users/getGeoJsonEvents', {latitude: map.value.getCenter().lat, longitude: map.value.getCenter().lng}).then(() => {
-            map.value.getSource("events").setData(eventJson.value);
-          })
-          store.dispatch('users/getGeoJsonBars', {latitude: map.value.getCenter().lat, longitude: map.value.getCenter().lng}).then(() => {
-            map.value.getSource("bars").setData(barsJson.value);
-          })
-          store.dispatch('users/getGeoJsonResto', {latitude: map.value.getCenter().lat, longitude: map.value.getCenter().lng}).then(() => {
-            map.value.getSource("restos").setData(restoJson.value);
-          })
-          console.log('loading events')
-          setTimeout(() => {
-             store.commit('events/loadingEvent', 'idle')
-          }, 7000);
-         
-        }
-        
-        try {
-          markerController();
-        } catch (error) {
-          console.log("map not ready");
+        if(user.value) {
+          map.value.resize();
+          if(loadingEvent.value === 'idle'){
+            store.commit('events/loadingEvent', 'loading')
+            store.dispatch('users/getGeoJsonEvents', {latitude: map.value.getCenter().lat, longitude: map.value.getCenter().lng}).then(() => {
+              map.value.getSource("events").setData(eventJson.value);
+            })
+            store.dispatch('users/getGeoJsonBars', {latitude: map.value.getCenter().lat, longitude: map.value.getCenter().lng}).then(() => {
+              map.value.getSource("bars").setData(barsJson.value);
+            })
+            store.dispatch('users/getGeoJsonResto', {latitude: map.value.getCenter().lat, longitude: map.value.getCenter().lng}).then(() => {
+              map.value.getSource("restos").setData(restoJson.value);
+            })
+            console.log('loading events')
+            setTimeout(() => {
+              store.commit('events/loadingEvent', 'idle')
+            }, 10000);
+          
+          }
+          
+          try {
+            if(user.value){
+              markerController();
+            }
+          } catch (error) {
+            console.log("map not ready");
+          }
         }
       });
 
@@ -470,19 +476,32 @@ export default defineComponent({
       map.value.on("dragend", async function () {
         store.commit('events/loadingEvent', 'idle')
       });
-
+    }
+    onMounted(() => {
+      init()
+      const currentTime = moment()
+      const morning = moment('6:00am', 'h:mma')
+      const evening = moment('6:00pm', 'h:mma')
+      console.log(currentTime.isBetween(morning, evening))
+      if(currentTime.isBetween(morning, evening)) {
+        initMap('mapbox://styles/mickmick1989/ckg6chu5e1uqw19lo40u1od9a')
+      } else {
+        initMap('mapbox://styles/mickmick1989/ckg6cn7nw4jm819p020ysv99f')
+      }
     });
     watchEffect(() => {
-      if (refreshData.value === "refresh") {
-        map.value.getSource("events").setData(eventJson.value);
-        map.value.getSource("restos").setData(restoJson.value);
-        map.value.getSource("bars").setData(barsJson.value);
-        searching.value = false;
-        posting.value = false;
-        document
-          .getElementsByClassName("mapboxgl-ctrl-geocoder")[0]
-          .classList.remove("show-search");
-        store.commit("users/refreshData", "idle");
+      if(user.value){
+         if (refreshData.value === "refresh") {
+          map.value.getSource("events").setData(eventJson.value);
+          map.value.getSource("restos").setData(restoJson.value);
+          map.value.getSource("bars").setData(barsJson.value);
+          searching.value = false;
+          posting.value = false;
+          document
+            .getElementsByClassName("mapboxgl-ctrl-geocoder")[0]
+            .classList.remove("show-search");
+          store.commit("users/refreshData", "idle");
+        }
       }
     });
     return {

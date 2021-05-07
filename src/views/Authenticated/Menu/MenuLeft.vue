@@ -129,7 +129,7 @@ export default {
     const logout = async () => {
       const res = await store.dispatch("users/userLogout");
        if(res) {
-            router.push('/home')
+            router.replace('/home')
         }
     };
     return {

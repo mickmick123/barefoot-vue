@@ -7,7 +7,7 @@
     </ion-header>
     <ion-content class="secondary-color">
       <template
-        v-if="searchContainer.length > 0 && searchPage === 'friendsNearby'"
+        v-if="searchContainer && searchContainer.length > 0"
       >
         <div
           class="nearby-people"
@@ -97,7 +97,7 @@
       <template v-else>
         <div
           class="nearby-people"
-          v-for="(people, index) in peopleNearby"
+          v-for="(people, index) in usersList"
           :key="index"
         >
           <ion-avatar class="nearbyAvatar">
@@ -180,7 +180,7 @@
           </div>
         </div>
       </template>
-      <template v-if="peopleNearby.length === 0">
+      <template v-if="usersList.length === 0">
         <div class="friend-empty">
           <h3>Searching for a friend</h3>
         </div>
@@ -191,7 +191,7 @@
 
 <script lang="ts">
 import { star } from "ionicons/icons";
-import { computed, defineComponent, ref } from "vue";
+import { computed, defineComponent, nextTick, ref, watch } from "vue";
 import {
   IonContent,
   IonHeader,
@@ -207,6 +207,7 @@ import {
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import Popover from "./popover.vue";
+import { friendsHandler } from '../../../services/friends'
 export default defineComponent({
   components: {
     IonContent,
@@ -229,6 +230,18 @@ export default defineComponent({
     const myFriendsList = computed(() => store.state.inApp.myFriends);
     const myFriendsRequests = computed(() => store.state.inApp.peopleRequest);
     const mySendRequests = computed(() => store.state.inApp.mySendRequests);
+    const { usersList } = friendsHandler()
+    watch(
+      usersList,
+      () => {
+        nextTick(() => {
+            console.log('searching')
+        //  bottom.value?.scrollIntoView({ behavior: 'smooth' })
+        })
+      },
+      { deep: true }
+    )
+
     const disableChat = ref(false);
     const gotoAddFriend = (id: any, avatar: any) => {
       store.dispatch("friends/getUserData", id);
@@ -247,7 +260,7 @@ export default defineComponent({
       store.commit("friends/setAvatar", avatar);
       const chatId = user.value.id < id ? user.value.id + '_' + id : id + '_' + user.value.id;
       disableChat.value = false;
-      router.push('/messages/'+chatId)
+      router.push('/messages/'+chatId+'/'+id)
     };
     const backToMap = () => {
       router.push("/map");
@@ -296,7 +309,7 @@ export default defineComponent({
     };
     return {
       backToMap,
-      peopleNearby,
+      usersList,
       peopleImages,
       toUpper,
       star,

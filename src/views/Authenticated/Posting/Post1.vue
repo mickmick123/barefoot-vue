@@ -64,10 +64,11 @@ export default defineComponent({
                 const { eventDetails } = theForm.values;
                 store.state.users.postData.title = eventDetails.title
                 store.state.users.postData.description = eventDetails.description
-                store.state.users.postData.country = eventDetails.selectedCountry
+                // store.state.users.postData.country = eventDetails.selectedCountry
+                // store.state.users.postData.region = eventDetails.selectedRegion
                 store.state.users.postData.address = eventDetails.address
                 store.state.users.postData.floor = eventDetails.floor
-                store.state.users.postData.city = eventDetails.selectedCity
+                // store.state.users.postData.city = eventDetails.selectedCity
                 store.state.users.postData.category = eventDetails.category
                 router.push({name: 'post-2'})
             }

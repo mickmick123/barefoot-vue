@@ -5,3 +5,5 @@ declare module '*.vue' {
 }
 declare module 'mapbox-gl';
 declare module '@mapbox/mapbox-gl-geocoder';
+declare module 'ngeohash';
+declare module 'unirest';

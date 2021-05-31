@@ -61,7 +61,7 @@ import {
 import { people, search, personAdd } from "ionicons/icons";
 import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
-
+import { friendsHandler } from '../../../services/friends'
 export default defineComponent({
   components: {
     IonIcon,
@@ -83,6 +83,7 @@ export default defineComponent({
     const route = useRoute()
     const store = useStore()
     const user = computed(() => store.state.users.user)
+    const { friendSearch } = friendsHandler()
     const backToMap = () => {
           router.push('/map')
           menuController.enable(true, 'first');
@@ -111,10 +112,12 @@ export default defineComponent({
       }
     };
     const handleSearch = async () => {
-      await store.dispatch('inApp/searching', {search: searchbar.value.toLowerCase(), route: route.name, id: user.value.id})
+      // await store.dispatch('inApp/searching', {search: searchbar.value.toLowerCase(), route: route.name, id: user.value.id})
+      friendSearch(searchbar.value.toLowerCase(), route.name)
     }
     const resetSearch = async () => {
        searchbar.value = ''
+       store.commit('inApp/fillSearch', [])
        store.dispatch('inApp/searchingStatus', false)
     }
     return {

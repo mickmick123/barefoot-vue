@@ -38,6 +38,7 @@ export default {
       startTime: null,
       endTime: null,
       category: "",
+      region: null,
     },
     eventJson: {
       type: "FeatureCollection",
@@ -241,6 +242,14 @@ export default {
       firebase.firestore().collection("epoints").doc(state.user.id).get().then((snapshot) => {
         if(snapshot.exists)
           commit('fillEpoints', snapshot.data()?.current)
+      })
+    },
+    async updateLoginEvent({commit, state}: any, payload: any) {
+      firebase.firestore().collection("users").doc(state.user.id).update({
+        userStatus: {
+          lastSeen: firebase.firestore.FieldValue.serverTimestamp(),
+          online: payload
+        }
       })
     },
     async savePost({ commit, state }: any) {
@@ -1183,6 +1192,10 @@ export default {
                 event: true,
                 bar: true,
               },
+              userStatus: {
+                lastSeen: firebase.firestore.FieldValue.serverTimestamp(),
+                online: false
+              }
             };
             await firebase
               .firestore()

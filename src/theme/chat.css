@@ -1,0 +1,194 @@
+.chat-input {
+    min-height: 7vh;
+    display: flex;
+    align-content: center;
+    align-items: center;
+    color:rgba(59, 59, 59, 0.651);
+}
+#chatContent {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100vw;
+}
+.chat-input ion-textarea {
+    flex-basis: 90%;
+}
+.chat-input span {
+    flex-basis: 10%;
+    font-size: 1.5rem;
+    color: rgb(59, 99, 173);
+}
+.chat-body {
+    width: 85%;
+    flex-basis: 100%;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+.chat-sender {
+    align-self: flex-end;
+    margin-left:15%;
+    background: linear-gradient(#f8a689cc, #f8a689cc 0%, #f8a689cc 100%);
+}
+
+.chat-receiver {
+    align-self: flex-start;
+    background: linear-gradient(rgb(255, 237, 237), rgb(248, 240, 240) 0%, #eee 100%);
+}
+
+.chat-receiver + .chat-sender{
+    border-top-right-radius: 15px;
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
+}
+
+.chat-receiver + .chat-receiver{
+    border-radius: 15px;
+}
+
+.chat-receiver:last-of-type {
+    border-bottom-left-radius: 30px;
+}
+
+.chat-sender + .chat-sender{
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
+}
+
+.chat-sender + .chat-receiver{
+    border-bottom-right-radius: 15px;
+    border-top-right-radius: 15px;
+    border-top-left-radius: 15px;
+}
+
+.chat-sender:last-of-selector {
+    border-bottom-right-radius: 30px !important;
+    background-color: blue;
+}
+
+.chat-box {
+    flex-basis: 100%;
+    display: flex;
+    background-color: transparent;
+    border-radius: 10px;
+    min-height: 3rem;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+    position: relative;
+    /* box-shadow: inset 0 0 1px rgba(0, 0, 0, 0.16), 0 0 1px rgba(0, 0, 0, 0.45); */
+}
+.chat-box ion-avatar{
+    flex-basis: 20%;
+    max-height: 3rem;
+    max-width: 3rem;
+    min-height: 3rem;
+    min-width: 3rem;
+    margin: 3px;
+}
+
+.chat-container {
+    flex-basis: 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    max-width: 100%;
+}
+.chat-header {
+    flex-basis: 100%;
+    font-size: 14px;
+    font-weight: 600;
+    align-self: flex-start;
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
+    color:#ff4600;
+}
+.chat-header i {
+    font-weight: lighter;
+    font-size: 11px;
+    margin-left: 5px;
+    color: rgba(97, 95, 95, 0.651);
+}
+.chat-content {
+    flex-basis: 100%;
+    margin-left: 13px;
+    margin-top: 0;
+    padding-top: 0;
+}
+.chat-content p {
+    text-align: left;
+    font-size: 12px;
+    margin-top: 0;
+    padding-top: 0;
+    color:rgb(61, 61, 61)
+}
+.top-header {
+    display: flex;
+}
+.top-header ion-avatar {
+    width: 2.4rem;
+    height: 2.4rem;
+}
+.top-header ion-title {
+    font-size: 1.1rem !important;
+    padding: 0 !important;
+}
+.top-header-inner span {
+    font-size: .75rem;
+    text-align: left;
+    color: rgb(90, 90, 90);
+}
+.top-header-inner {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    align-content: center;
+    text-align: left;
+    padding-left: 15px;
+}
+
+
+.group-chat-container {
+    display: flex;
+    flex-direction: column;
+}
+.group-chat-box {
+    width: 90%;
+    display: flex;
+    margin-bottom: 0.2rem;
+    font-size: 14px;
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+.group-chat-box ion-avatar {
+    width: 3rem;
+    height: 3rem;
+    margin: 0.5rem;
+}
+.group-me .group-content{ 
+    background: linear-gradient(#f8a689cc, #f8a689cc 0%, #f8a689cc 100%);
+    padding: 0.1rem 0.5rem 0.1rem 0.5rem;
+    border-radius: 20px;
+    flex-basis: 80%;
+    border-top-left-radius: 0px;
+}
+.group-him .group-content{ 
+    background: linear-gradient(rgb(255, 237, 237), rgb(248, 240, 240) 0%, #eee 100%);
+    padding: 0.1rem 0.5rem 0.1rem 0.5rem;
+    border-radius: 20px;
+    flex-basis: 80%;
+    border-top-left-radius: 0px;
+}
+.group-me {
+    align-self: flex-end;
+}
+.group-him {
+    align-self: flex-start;
+}
+.group-content > span {
+    font-size: 10px;
+    color:rgb(59, 99, 173)
+}

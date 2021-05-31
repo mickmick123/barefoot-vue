@@ -144,7 +144,7 @@ export default {
                 const attendies = payload.event.attendies.filter(
                   (obj: { id: any }) => obj.id !== payload.user.id
                 );
-                state.event.attendies = attendies;
+                // state.event.attendies = attendies;
                 return firebase.firestore().runTransaction((transaction) => {
                   // This code may get re-run multiple times if there are conflicts.
                   return transaction.get(eventRef.doc(payload.event.eventId)).then((sfDoc) => {
@@ -193,7 +193,7 @@ export default {
               const likes = payload.like
                 ? payload.event.likes + 1
                 : payload.event.likes - 1;
-              state.event.likes = likes;
+              // state.event.likes = likes;
 
               return firebase.firestore().runTransaction((transaction) => {
                 // This code may get re-run multiple times if there are conflicts.

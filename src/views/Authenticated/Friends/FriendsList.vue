@@ -6,7 +6,7 @@
       </ion-toolbar>
     </ion-header>
     <ion-content class="secondary-color">
-      <template v-if="searchContainer.length > 0 && searchPage ==='friendsList'">
+      <template v-if="searchContainer && searchContainer.length > 0">
         <div class="nearby-people" v-for="(people, index) in searchContainer" :key="index" >
           <ion-avatar class="nearbyAvatar" >
             <img :class="people.status+'-user'" :src="peopleImages && peopleImages.length > 0 && peopleImages.find(img => img.id === people.id) && peopleImages.find(img => img.id === people.id).avatar" alt="">
@@ -26,7 +26,7 @@
         </div>
       </template>
       <template v-else>
-        <div class="nearby-people" v-for="(people, index) in myFriendsList" :key="index" >
+        <div class="nearby-people" v-for="(people, index) in friendsList" :key="index" >
           <ion-avatar class="nearbyAvatar" >
             <img :class="people.status+'-user'" :src="peopleImages && peopleImages.length > 0 && peopleImages.find(img => img.id === people.id) && peopleImages.find(img => img.id === people.id).avatar" alt="">
           </ion-avatar>
@@ -44,7 +44,7 @@
           </div>
         </div>
       </template>
-      <template v-if="myFriendsList.length === 0">
+      <template v-if="friendsList.length === 0">
         <div class="friend-empty">
           <h3>Go on and find new friends</h3>
         </div>
@@ -55,7 +55,7 @@
 
 <script lang="ts">
 import { star } from 'ionicons/icons';
-import { computed, defineComponent, onMounted, ref } from "vue";
+import { computed, defineComponent, nextTick, onMounted, ref, watch } from "vue";
 import {
   IonContent,
   IonHeader,
@@ -70,6 +70,7 @@ import {
 } from "@ionic/vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
+import { friendsHandler } from '../../../services/friends'
 export default defineComponent({
   components: {
     IonContent,
@@ -91,6 +92,17 @@ export default defineComponent({
     const user = computed(() => store.state.users.user)
     const myFriends = computed(() => store.state.friends.myFriends)
     const disableChat = ref(false)
+    const { friendsList } = friendsHandler();
+    watch(
+      friendsList,
+      () => {
+        nextTick(() => {
+            console.log('searching')
+        //  bottom.value?.scrollIntoView({ behavior: 'smooth' })
+        })
+      },
+      { deep: true }
+    )
     const gotoProfile = (id: any, avatar: any) => {
       store.dispatch('friends/getUserData', id)
       store.commit('friends/setAvatar', avatar)
@@ -103,14 +115,7 @@ export default defineComponent({
       store.commit('friends/setAvatar', avatar)
       const chatId = user.value.id < id ? user.value.id + '_' + id : id + '_' + user.value.id;
       disableChat.value = false;
-      router.push('/messages/'+chatId)
-      // store.dispatch('chats/getCurrentChatId', {id1: user.value.id, id2: id}).then((res) => {
-      //   if(res) {
-      //     router.push({name: 'messages', params: { id: id }})
-      //     disableChat.value = false;
-      //   }
-      // })
-      
+      router.push('/messages/'+chatId+'/'+id)
     }
     const backToMap = () => {
       router.push("/map");
@@ -153,6 +158,7 @@ export default defineComponent({
       gotoProfile,
       gotoMessages,
       disableChat,
+      friendsList,
     };
   },
 });

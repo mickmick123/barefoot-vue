@@ -34,7 +34,7 @@
               My Friends
             </ion-label>
           </ion-item>
-          <ion-item class="menu-item" lines="none">
+          <ion-item class="menu-item" lines="none" @click="router.push('/my-messages')">
             <ion-avatar slot="start">
                 <img :src="messagesIcon">
             </ion-avatar>

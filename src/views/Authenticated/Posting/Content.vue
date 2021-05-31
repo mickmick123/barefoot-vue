@@ -1,7 +1,7 @@
 <template>
   <ion-page>
     <ion-content :fullscreen="true">
-      <div class="event-main-container" v-if="event && loadEvent === 'idle'">
+      <div class="event-main-container" v-if="eventData">
         <div class="event-menu-container">
           <ion-icon :src="shareSocial" @click="shareRet" />
           <ion-icon
@@ -16,13 +16,13 @@
           />
         </div>
         <div class="event-menu-container-right">
-          <ion-icon :src="closeCircle" @click="router.push('/map')" />
+          <ion-icon :src="closeCircle" @click="pageDestroy" />
         </div>
 
         <div
           class="event-image-container"
           :style="`background-image: url(${
-            (event && event.banner) || defaultImage
+            (eventData && eventData.banner) || defaultImage
           })`"
         >
           <div class="event-meter">
@@ -35,13 +35,13 @@
           </div>
         </div>
         <div class="event-title-container">
-          <h5>{{ event && event.title }}</h5>
+          <h5>{{ eventData && eventData.title }}</h5>
           <div class="event-star">
             <ion-icon :src="starImage"></ion-icon>
-            <span>{{ event.likes }}</span>
+            <span>{{ eventData.likes }}</span>
           </div>
           <div class="event-distance">
-            <p>{{ event && event.address }}</p>
+            <p>{{ eventData && eventData.address }}</p>
             <p
               :style="
                 kmaway > 50
@@ -69,14 +69,14 @@
           </div>
           <div class="event-address">
             <p>
-              {{ event && moment(event.startDate).format("ll") }} -
-              {{ event && moment(event.endDate).format("ll") }}
+              {{ eventData && moment(eventData.startDate).format("ll") }} -
+              {{ event && moment(eventData.endDate).format("ll") }}
             </p>
             <p>
-              {{ event && moment(event.startDate).format("ddd") }}
-              {{ event && event.startTime }} -
-              {{ event && moment(event.endDate).format("ddd") }}
-              {{ event && event.endTime }}
+              {{ eventData && moment(eventData.startDate).format("ddd") }}
+              {{ eventData && eventData.startTime }} -
+              {{ eventData && moment(eventData.endDate).format("ddd") }}
+              {{ eventData && eventData.endTime }}
             </p>
           </div>
         </div>
@@ -86,10 +86,10 @@
             <span><ion-icon :src="woman" />{{ womanCount.length }}</span>
             <span><ion-icon :src="help" />{{ unknownCount.length }}</span>
           </div>
-          <ion-button>JOIN LIVE CHAT</ion-button>
+          <ion-button @click="router.push(`/group-messages/${category}/${eventData.eventId}`)">JOIN LIVE CHAT</ion-button>
         </div>
         <div class="event-content">
-          <p>{{ event && event.description }}</p>
+          <p>{{ eventData && eventData.description }}</p>
         </div>
       </div>
     </ion-content>
@@ -124,6 +124,7 @@ import {
   help,
 } from "ionicons/icons";
 import { Plugins } from "@capacitor/core";
+import { useEvents } from "@/services/post"
 const { Share } = Plugins;
 
 export default defineComponent({
@@ -150,6 +151,9 @@ export default defineComponent({
     const manCount = ref([]);
     const womanCount = ref([]);
     const unknownCount = ref([]);
+    const groupId = ref();
+    const { id, category } = route.params;
+    const { eventData } =  new (useEvents as any)(category, id);
     const defaultImage = computed(() =>
       require("../../../../public/assets/images/events/default-image.jpg")
     );
@@ -186,29 +190,35 @@ export default defineComponent({
       const d = R * c;
       return d;
     };
-
-    watchEffect(async () => {
-      if(loadEvent.value === "load"){
-        store.commit("users/setLoading", true);
-      }else {
-        store.commit("users/setLoading", false);
-      }
-      if (loadEvent.value === "load" || reloadEvent.value === "load") {
-        const { id } = route.params;
-        await store.dispatch("events/getEvent", id).then((res) => {
-          console.log(res)
-          const eventStart = moment(
-            new Date(res.startDate + " " + res.startTime)
-          ).diff(new Date(), "minutes");
-          const eventEnd = moment(
-            new Date(res.endDate + " " + res.endTime)
-          ).diff(new Date(), "minutes");
-          kmaway.value = calcCrow(
+    watchEffect(() => {
+      if(eventData.value) {
+        kmaway.value = calcCrow(
             user.value.coordinates.latitude,
             user.value.coordinates.longitude,
-            res.coordinates.latitude,
-            res.coordinates.longitude
+            eventData.value.coordinates.latitude,
+            eventData.value.coordinates.longitude
           ).toFixed(2);
+          attending.value = eventData.value.attendies.some(
+            (e: any) => e.id === user.value.id
+          );
+          manCount.value = eventData.value.attendies.filter(
+            (e: any) => e.gender === "male"
+          );
+          womanCount.value = eventData.value.attendies.filter(
+            (e: any) => e.gender === "female"
+          );
+          unknownCount.value = eventData.value.attendies.filter(
+            (e: any) => e.gender !== "female" && e.gender !== "male"
+          );
+          like.value = userEvents.value.some(
+            (e: any) => e.id === eventData.value.eventId && e.like === true
+          );
+          const eventStart = moment(
+            new Date(eventData.value.startDate + " " + eventData.value.startTime)
+          ).diff(new Date(), "minutes");
+          const eventEnd = moment(
+            new Date(eventData.value.endDate + " " + eventData.value.endTime)
+          ).diff(new Date(), "minutes");
           if (eventStart > 0 && eventEnd > 0) {
             eventStatus.value = "Upcomming";
           } else if (eventStart < 0 && eventEnd > 0) {
@@ -216,28 +226,62 @@ export default defineComponent({
           } else {
             eventStatus.value = "Ended";
           }
-          attending.value = res.attendies.some(
-            (e: any) => e.id === user.value.id
-          );
-          manCount.value = res.attendies.filter(
-            (e: any) => e.gender === "male"
-          );
-          womanCount.value = res.attendies.filter(
-            (e: any) => e.gender === "female"
-          );
-          unknownCount.value = res.attendies.filter(
-            (e: any) => e.gender !== "female" && e.gender !== "male"
-          );
-          like.value = userEvents.value.some(
-            (e: any) => e.id === res.eventId && e.like === true
-          );
-        });
-        setTimeout(() => {
-          store.commit("events/eventStatus", "idle");
-          store.commit("events/loadingEvent", "idle");
-        }, 1000);
+        store.commit("users/setLoading", false);
       }
-    });
+    })
+    
+    // watchEffect(async () => {
+    //   if(loadEvent.value === "load"){
+    //     store.commit("users/setLoading", true);
+    //   }else {
+    //     store.commit("users/setLoading", false);
+    //   }
+    //   if (loadEvent.value === "load" || reloadEvent.value === "load") {
+    //     const { id } = route.params;
+    //     groupId.value = id;
+    //     await store.dispatch("events/getEvent", id).then((res) => {
+    //       category.value = res.category
+    //       const eventStart = moment(
+    //         new Date(res.startDate + " " + res.startTime)
+    //       ).diff(new Date(), "minutes");
+    //       const eventEnd = moment(
+    //         new Date(res.endDate + " " + res.endTime)
+    //       ).diff(new Date(), "minutes");
+    //       kmaway.value = calcCrow(
+    //         user.value.coordinates.latitude,
+    //         user.value.coordinates.longitude,
+    //         res.coordinates.latitude,
+    //         res.coordinates.longitude
+    //       ).toFixed(2);
+    //       if (eventStart > 0 && eventEnd > 0) {
+    //         eventStatus.value = "Upcomming";
+    //       } else if (eventStart < 0 && eventEnd > 0) {
+    //         eventStatus.value = "Ongoing";
+    //       } else {
+    //         eventStatus.value = "Ended";
+    //       }
+    //       attending.value = res.attendies.some(
+    //         (e: any) => e.id === user.value.id
+    //       );
+    //       manCount.value = res.attendies.filter(
+    //         (e: any) => e.gender === "male"
+    //       );
+    //       womanCount.value = res.attendies.filter(
+    //         (e: any) => e.gender === "female"
+    //       );
+    //       unknownCount.value = res.attendies.filter(
+    //         (e: any) => e.gender !== "female" && e.gender !== "male"
+    //       );
+    //       like.value = userEvents.value.some(
+    //         (e: any) => e.id === res.eventId && e.like === true
+    //       );
+    //     });
+    //     setTimeout(() => {
+    //       store.commit("events/eventStatus", "idle");
+    //       store.commit("events/loadingEvent", "idle");
+    //     }, 1000);
+    //   }
+    // });
     const presentAlert = async () => {
       if (!attending.value) {
         const alert = await alertController.create({
@@ -256,17 +300,17 @@ export default defineComponent({
                 store
                   .dispatch("events/confirmAttendance", {
                     user: user.value,
-                    event: event.value,
+                    event: eventData.value,
                   })
                   .then(() => {
                     attending.value = true;
-                    manCount.value = event.value.attendies.filter(
+                    manCount.value = eventData.value.attendies.filter(
                       (e: any) => e.gender === "male"
                     );
-                    womanCount.value = event.value.attendies.filter(
+                    womanCount.value = eventData.value.attendies.filter(
                       (e: any) => e.gender === "female"
                     );
-                    unknownCount.value = event.value.attendies.filter(
+                    unknownCount.value = eventData.value.attendies.filter(
                       (e: any) => e.gender !== "female" && e.gender !== "male"
                     );
                   });
@@ -292,7 +336,7 @@ export default defineComponent({
                 store
                   .dispatch("events/cancelAttendance", {
                     user: user.value,
-                    event: event.value,
+                    event: eventData.value,
                   })
                   .then(() => {
                     attending.value = false;
@@ -318,10 +362,13 @@ export default defineComponent({
       await store
         .dispatch("events/likeEvent", {
           user: user.value,
-          event: event.value,
+          event: eventData.value,
           like: like.value,
         })
     };
+    const pageDestroy = () => {
+      router.replace('/map')
+    }
     return {
       user,
       event,
@@ -348,6 +395,10 @@ export default defineComponent({
       womanCount,
       unknownCount,
       shareRet,
+      groupId,
+      category,
+      eventData,
+      pageDestroy,
     };
   },
 });

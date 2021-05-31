@@ -6,7 +6,7 @@
       </ion-toolbar>
     </ion-header>
     <ion-content class="secondary-color">
-      <template v-if="searchContainer.length > 0 && searchPage ==='friendsRequest'">
+      <template v-if="searchContainer && searchContainer.length > 0">
         <div class="nearby-people" v-for="(people, index) in searchContainer" :key="index" >
           <ion-avatar class="nearbyAvatar" >
             <img :class="people.status+'-user'" :src="peopleImages && peopleImages.length > 0 && peopleImages.find(img => img.id === people.id) && peopleImages.find(img => img.id === people.id).avatar" alt="">
@@ -26,7 +26,7 @@
         </div>
       </template>
       <template v-else>
-        <div class="nearby-people" v-for="(people, index) in peopleRequest" :key="index" >
+        <div class="nearby-people" v-for="(people, index) in friendsRequest" :key="index" >
           <ion-avatar class="nearbyAvatar" >
             <img :class="people.status+'-user'" :src="peopleImages && peopleImages.length > 0 && peopleImages.find(img => img.id === people.id) && peopleImages.find(img => img.id === people.id).avatar" alt="">
           </ion-avatar>
@@ -44,7 +44,7 @@
           </div>
         </div>
       </template>
-      <template v-if="peopleRequest.length === 0">
+      <template v-if="friendsRequest.length === 0">
         <div class="friend-empty">
           <h3>You dont have a friend request</h3>
         </div>
@@ -71,6 +71,7 @@ import {
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import Popover from './popover.vue'
+import { friendsHandler } from '../../../services/friends'
 export default defineComponent({
   components: {
     IonContent,
@@ -85,12 +86,12 @@ export default defineComponent({
    setup() {
     const router = useRouter()
     const store = useStore()
-    const peopleRequest = computed(() => store.state.inApp.peopleRequest)
     const peopleImages = computed(() => store.state.inApp.images)
     const searchContainer = computed(() => store.state.inApp.searchContainer)
     const searchPage = computed(() => store.state.inApp.searchPage)
     const user = computed(() => store.state.users.user)
     const myFriendsList = computed(() => store.state.friends.myFriends)
+    const { friendsRequest } = friendsHandler()
     const gotoAddFriend = (id: any, avatar: any) => {
       console.log(avatar)
       store.dispatch('friends/getUserData', id)
@@ -149,7 +150,6 @@ export default defineComponent({
     }
     return {
       backToMap,
-      peopleRequest,
       peopleImages,
       toUpper,
       star,
@@ -160,6 +160,7 @@ export default defineComponent({
       router,
       ucwords,
       acceptance,
+      friendsRequest,
     };
   },
 });

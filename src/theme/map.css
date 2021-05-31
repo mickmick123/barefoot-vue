@@ -71,13 +71,30 @@
     align-items: center;
     align-content: center;
     top: 45.5vh;
-    left: 48.5vw;
+    left: 46vw;
 }
+
+@keyframes scaleIn {
+    0% {
+      transform: scale(.5, .5);
+      opacity: 1;
+    }
+    50% {
+      transform: scale(1, 1);
+      opacity: 1;
+    }
+    100% {
+        transform: scale(.5, .5);
+        opacity: 1;
+      }
+  }
 .flag-outline ion-icon {
     flex-basis: 100%;
     width: 5vh;
     height: 5vh;
     color:#ff4600;
+    font-weight:bolder;
+    animation: scaleIn 2s infinite;
 }
 .speech-bubble {
 	position: absolute;

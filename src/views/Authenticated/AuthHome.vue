@@ -19,10 +19,11 @@
         :class="!posting ? 'no-display' : ''"
       >
         <div class="speech-bubble" :class="!showBubble ? 'no-display' : ''">
-          Pin this flag to the event location
+          Pin this circle to the event location
         </div>
-        <ion-icon :src="flagOutline"></ion-icon>
+        <ion-icon :src="ellipseOutline"></ion-icon>
       </div>
+      
       <div id="map"></div>
       <ion-fab
         vertical="bottom"
@@ -86,7 +87,7 @@ import {
   IonIcon,
   IonFabList,
 } from "@ionic/vue";
-import { arrowUpCircle } from "ionicons/icons";
+import { arrowUpCircle, ellipseOutline } from "ionicons/icons";
 import { computed, defineComponent, onMounted, ref, watchEffect } from "vue";
 import mapboxgl from "mapbox-gl";
 import { useStore } from "vuex";
@@ -166,9 +167,7 @@ export default defineComponent({
     const rightButton = computed(() =>
       require("../../../public/assets/images/map/apps-outline.svg")
     );
-    const flagOutline = computed(() =>
-      require("../../../public/assets/images/map/flag-outline.svg")
-    );
+   
     const geoLocator = new mapboxgl.GeolocateControl({
       positionOptions: {
         enableHighAccuracy: true,
@@ -261,7 +260,7 @@ export default defineComponent({
           assignBtn.addEventListener('click', () => {
             store.commit('events/eventStatus', 'load')
             store.commit('events/setEvent', undefined)
-            router.push('/posts/'+eventId)
+            router.push('/posts/resto/'+eventId)
           });
           new mapboxgl.Popup()
             .setLngLat(coordinates)
@@ -319,7 +318,7 @@ export default defineComponent({
           assignBtn.addEventListener('click', () => {
             store.commit('events/eventStatus', 'load')
             store.commit('events/setEvent', undefined)
-            router.push('/posts/'+eventId)
+            router.push('/posts/events/'+eventId)
           });
           new mapboxgl.Popup()
             .setLngLat(coordinates)
@@ -377,7 +376,7 @@ export default defineComponent({
           assignBtn.addEventListener('click', () => {
             store.commit('events/eventStatus', 'load')
             store.commit('events/setEvent', undefined)
-            router.push('/posts/'+eventId)
+            router.push('/posts/bars/'+eventId)
           });
 
           new mapboxgl.Popup()
@@ -523,7 +522,7 @@ export default defineComponent({
       searchIcon,
       searching,
       postHandler,
-      flagOutline,
+      ellipseOutline,
       showBubble,
       posting,
       startPosting,

@@ -62,6 +62,11 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('@/views/Authenticated/Settings/SettingsMenu.vue')
   },
   {
+    path: '/my-messages',
+    name: 'my-messages',
+    component: () => import('@/views/Authenticated/Messages.vue')
+  },
+  {
     path: '/settings/account',
     name: 'account',
     component: () => import('@/views/Authenticated/Settings/AccountSettings.vue')
@@ -117,7 +122,7 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('@/views/Authenticated/Posting/Post3.vue')
   },
   {
-    path: '/posts/:id',
+    path: '/posts/:category/:id',
     name: 'post-content',
     component: () => import('@/views/Authenticated/Posting/Content.vue')
   },
@@ -132,9 +137,14 @@ const routes: Array<RouteRecordRaw> = [
     name: 'friendsSendGifts'
   },
   {
-    path:'/messages/:id',
+    path:'/messages/:id/:receiverId',
     component: () => import('@/views/Authenticated/Chats/Chat.vue'),
     name: 'messages'
+  },
+  {
+    path:'/group-messages/:category/:id',
+    component: () => import('@/views/Authenticated/Chats/GroupChat.vue'),
+    name: 'groupMessages'
   },
   {
     path:'/friends-profile',

@@ -1,6 +1,5 @@
 import firebase from "firebase";
 import * as geofire from "geofire-common";
-import { State } from "ionicons/dist/types/stencil-public-runtime";
 export default {
   namespaced: true,
   state: {
@@ -16,6 +15,9 @@ export default {
     mySendRequests: [],
   },
   mutations: {
+    fillSearch(state: any, payload: any) {
+      state.searchContainer = payload
+    },
     fillMyRequests(state: any, payload: any) {
       state.mySendRequests.push(payload)
     },

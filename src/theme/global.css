@@ -6,6 +6,7 @@
     background-color: rgb(245, 244, 244);
     --background: rgb(245, 244, 244);
 }
+
 .flex-container {
     display: flex;
     flex-direction: column;

@@ -35,22 +35,19 @@ export default defineComponent({
     const router = useRouter()
     const unsubscribe = ref();
     onMounted(() => {
-      App.addListener('appStateChange', (state) => {
+      App.addListener('appStateChange', async (state) => {
         
         if (!state.isActive) {
   
           const taskId = BackgroundTask.beforeExit(async () => {
 
-            const start = new Date().getTime();
-            for (let i = 0; i < 1e18; i++) {
-              if ((new Date().getTime() - start) > 20000){
-                break;
-              }
-            }
+            await store.dispatch('users/updateLoginEvent', false)
             BackgroundTask.finish({
               taskId
             });
           });
+        } else {
+          await store.dispatch('users/updateLoginEvent', true)
         }
       })
     })

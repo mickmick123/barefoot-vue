@@ -6,12 +6,12 @@ ion-tab-bar {
     font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
     display: flex;
     width: 100%;
-    height: 14vh;
+    height: 6rem;
     flex-direction: row;
     flex-wrap: wrap;
     align-items: center;
     align-content:center;
-    margin: 0 1vw 0 0vw;
+    margin: 0 1rem 0 0vw;
     background-color: rgb(255, 255, 255);
     padding: 1px;
     border-bottom: 2px rgba(128, 128, 128, 0.267) solid;
@@ -284,7 +284,7 @@ ion-tab-bar {
 .friend-profile-gallery {
     height: 20vh;
     background-color: rgb(252, 252, 246);
-    margin-top: 1vh;
+    margin-top: 1rem;
     display: flex;
     flex-direction: row;
     overflow: scroll;
@@ -310,9 +310,9 @@ ion-tab-bar {
 .body-header{
     padding-left: 10px;
     height: 3rem;
-    background: linear-gradient(#cccccb48, #faf7f469 0%, #58575775 100%);
     display: flex;
     flex-direction: row;
+    background-color: #fff;
 }
 .body-content {
     background-color: rgb(245, 245, 245);

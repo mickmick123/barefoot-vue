@@ -44,6 +44,7 @@ import './theme/event.css';
 import './theme/post.css';
 import './theme/friends.css';
 import './theme/chat.css';
+import './theme/messages.css';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
 import firebase from 'firebase';
